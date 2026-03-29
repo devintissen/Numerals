@@ -1,0 +1,27 @@
+html, body {
+    width: 100%;
+    height: 100%;
+
+    margin: 0px;
+    padding: 0px;
+
+    background-color: lightgrey;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: end;
+}
+
+.Square_Button {
+    width: 60px;
+    height: 60px;
+
+    border: 0px;
+    outline: none;
+
+    background-color: white;
+
+    margin: 10px;
+    border-radius: 10px;
+}
