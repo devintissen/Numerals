@@ -5,15 +5,22 @@ html, body {
     margin: 0px;
     padding: 0px;
 
-    background-color: lightgrey;
+    background-color: rgb(211, 211, 211);
 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: end;
     align-items: end;
+
 }
 
-.Square_Button {
+.Button_Row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.Square_Button_Left {
     width: 60px;
     height: 60px;
 
@@ -22,6 +29,47 @@ html, body {
 
     background-color: white;
 
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 5px;
     border-radius: 10px;
+
+    box-shadow:
+    -2.5px -2.5px 16px rgb(255, 255, 255),  /* top-left */
+     2.5px  2.5px 16px rgba(0, 0, 0, 0.698); 
+}
+
+.Square_Button_Middle {
+    width: 60px;
+    height: 60px;
+
+    border: 0px;
+    outline: none;
+
+    background-color: white;
+
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 10px;
+
+    box-shadow:
+    -2.5px -2.5px 16px rgb(255, 255, 255),  /* top-left */
+     2.5px  2.5px 16px rgb(0, 0, 0); 
+}
+
+.Square_Button_Right {
+    width: 60px;
+    height: 60px;
+
+    border: 0px;
+    outline: none;
+
+    background-color: white;
+
+    margin-left: 5px;
+    margin-right: 10px;
+    border-radius: 10px;
+
+    box-shadow:
+    -2.5px -2.5px 16px rgb(255, 255, 255),  /* top-left */
+     2.5px  2.5px 16px rgb(0, 0, 0); 
 }
