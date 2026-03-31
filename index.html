@@ -7,38 +7,81 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="Button_Row">
-        <button class="Square_Button_Left">1</button>
-        <button class="Square_Button_Middle">2</button>
-        <button class="Square_Button_Middle">3</button>
-        <button class="Square_Button_Right">4</button>
+    <div class="Draggable_Area"></div>
+
+    <div class="Text_Input">
+
     </div>
 
     <div class="Button_Row">
-        <button class="Square_Button_Left">1</button>
-        <button class="Square_Button_Middle">2</button>
-        <button class="Square_Button_Middle">3</button>
-        <button class="Square_Button_Right">4</button>
+        <button class="Square_Button_Left" data-pressable>1</button>
+        <button class="Square_Button_Middle" data-pressable>2</button>
+        <button class="Square_Button_Middle" data-pressable>
+            <h1 class="Number_Title">%</h1>
+        </button>
+        <button class="Square_Button_Right" data-pressable>4</button>
     </div>
 
     <div class="Button_Row">
-        <button class="Square_Button_Left">1</button>
-        <button class="Square_Button_Middle">2</button>
-        <button class="Square_Button_Middle">3</button>
-        <button class="Square_Button_Right">4</button>
+        <button class="Square_Button_Left" data-pressable>
+            <h1 class="Number_Title">7</h1>
+        </button>
+        <button class="Square_Button_Middle" data-pressable>
+            <h1 class="Number_Title">8</h1>
+        </button>
+        <button class="Square_Button_Middle" data-pressable>
+            <h1 class="Number_Title">9</h1>
+        </button>
+        <!-- Add Icon Later for button below -->
+        <button class="Square_Button_Right" data-pressable>
+            <h1 class="Number_Title">*</h1>
+        </button>
     </div>
 
     <div class="Button_Row">
-        <button class="Square_Button_Left">1</button>
-        <button class="Square_Button_Middle">2</button>
-        <button class="Square_Button_Middle">3</button>
-        <button class="Square_Button_Right">4</button>
+        <button class="Square_Button_Left" data-pressable>
+            <h1 class="Number_Title">4</h1>
+        </button>
+        <button class="Square_Button_Middle" data-pressable>
+            <h1 class="Number_Title">5</h1>
+        </button>
+        <button class="Square_Button_Middle" data-pressable>
+            <h1 class="Number_Title">6</h1>
+        </button>
+        <!-- Add Icon Later for button below -->
+        <button class="Square_Button_Right" data-pressable>
+            <h1 class="Number_Title">-</h1>
+        </button>
     </div>
 
     <div class="Button_Row">
-        <button class="Square_Button_Left_Wide">1</button>
-        <button class="Square_Button_Middle">3</button>
-        <button class="Square_Button_Right">4</button>
+        <button class="Square_Button_Left" data-pressable>
+            <h1 class="Number_Title">1</h1>
+        </button>
+        <button class="Square_Button_Middle" data-pressable>
+            <h1 class="Number_Title">2</h1>
+        </button>
+        <button class="Square_Button_Middle" data-pressable>
+            <h1 class="Number_Title">3</h1>
+        </button>
+        <!-- Add Icon Later for button below -->
+        <button class="Square_Button_Right" data-pressable>
+            <h1 class="Number_Title">+</h1>
+        </button>
     </div>
+
+    <div class="Button_Row">
+        <button class="Square_Button_Left_Wide" data-pressable>
+            <h1 class="Number_Title">0</h1>
+        </button>
+        <button class="Square_Button_Middle" data-pressable>
+            <h1 class="Number_Title">.</h1>
+        </button>
+        <button class="Square_Button_Right" data-pressable>
+            <h1 class="Number_Title">=</h1>
+        </button>
+    </div>
+
+    <script src="button_animation.js"></script>
 </body>
 </html>
