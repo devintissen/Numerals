@@ -161,8 +161,8 @@ function evaluateExpression() {
 }
 
 function pressVisual(button) {
-    button.classList.add('active');
-    setTimeout(() => button.classList.remove('active'), 100);
+    button.classList.add('pressed');
+    setTimeout(() => button.classList.remove('pressed'), 100);
 }
 
 function findButtonByKey(key) {
