@@ -57,6 +57,38 @@ html, body {
     app-region: drag;
 }
 
+.Top_Menu_Draggable {
+    width: 100%;
+    height: 60px;
+
+    padding: 0px;
+    margin: 0px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.Menu_Button {
+    width: 20px;
+    height: 20px;
+
+    border: 0;
+    outline: none;
+    padding: 0px;
+    margin-left: 10px;
+    margin-top: 40px;
+
+    background-color: transparent;
+}
+
+.Menu_Icon {
+    width: 20px;
+    height: 20px;
+
+    margin: 0px;
+    padding: 0px;
+}
+
 .Button_Row {
     display: flex;
     flex-direction: row;
