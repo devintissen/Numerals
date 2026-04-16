@@ -7,14 +7,47 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <nav class="side-menu" id="sideMenu">
+        <button class="close-button" id="closeMenu">&times;</button>
+        <h2>Menu</h2>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <div class="overlay" id="overlay"></div>
+
     <div class="Top_Menu_Draggable">
-        <button class="Menu_Button">
+        <button class="Menu_Button" id="openMenu">
             <img src="Images/Menu.png" alt="Menu" class="Menu_Icon">
         </button>
 
         <div class="Draggable_Area"></div>
     </div>
     
+
+    <script>
+        const openMenu = document.getElementById("openMenu");
+        const closeMenu = document.getElementById("closeMenu");
+        const sideMenu = document.getElementById("sideMenu");
+        const overlay = document.getElementById("overlay");
+
+        function openSideMenu() {
+        sideMenu.classList.add("open");
+        overlay.classList.add("active");
+        }
+
+        function closeSideMenu() {
+        sideMenu.classList.remove("open");
+        overlay.classList.remove("active");
+        }
+
+        openMenu.addEventListener("click", openSideMenu);
+        closeMenu.addEventListener("click", closeSideMenu);
+        overlay.addEventListener("click", closeSideMenu);
+    </script>
+
 
     <div class="Text_Input">
         <div class="history" id="history" aria-live="polite"></div>

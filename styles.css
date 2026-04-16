@@ -12,7 +12,46 @@ html, body {
     justify-content: end;
     align-items: end;
 
+    /* overflow-x: hidden;
+    overflow-y: hidden; */
 }
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Side menu */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    max-width: 80%;
+    height: 100%;
+    background: #ffffff;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    padding: 60px 20px 20px;
+    box-sizing: border-box;
+}
+
+.side-menu.open {
+    transform: translateX(0);
+}
+
 
 .history {
     min-height: 24px;
