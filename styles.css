@@ -24,11 +24,13 @@ html, body {
     visibility: hidden;
     transition: opacity 0.3s ease;
     z-index: 999;
+    transition: 0.2s;
 }
 
 .overlay.active {
     opacity: 1;
     visibility: visible;
+    transition: 0.2s;
 }
 
 /* Side menu */
@@ -38,11 +40,17 @@ html, body {
     left: 0;
     width: 280px;
     max-width: 80%;
-    height: 100%;
-    background: #ffffff;
-    transform: translateX(-100%);
+    height: calc(100% - 20px);
+    background: rgb(224, 229, 236);
+    transform: translateX(calc(-100% - 10px));
     transition: transform 0.3s ease;
     padding-top:  40px;
+    border-radius: 10px;
+
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
     z-index: 1000;
     box-sizing: border-box;
 }
@@ -321,4 +329,64 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.Menu_Subtitle {
+    margin: 0px;
+    padding: 0px;
+
+    font-family: sans-serif;
+    font-weight: 600px;
+    font-size: 20px;
+}
+
+.Themes_Section {
+    width: calc(100% - 20px);
+    height: 100px;
+
+    padding: 0px;
+    margin: 0px;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+    background-color: transparent;
+}
+
+.Themes_Selector_Button {
+    width: 100%;
+    height: 20px;
+    outline: none;
+    border: 0;
+    margin-top: 10px;
+
+    background-color: transparent;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.Themes_Selector_Button_NA {
+    width: 100%;
+    height: 20px;
+    outline: none;
+    border: 0;
+    margin-top: 10px;
+
+    opacity: 50%;
+
+    background-color: transparent;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.Themes_Selector_Title {
+    font-family: sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+
+    margin: 0px;
+    margin-left: 10px;
+    padding: 0px;
 }
