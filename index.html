@@ -9,17 +9,13 @@
 <body>
     <nav class="side-menu" id="sideMenu">
         <button class="close-button" id="closeMenu">&times;</button>
-        <h2>Menu</h2>
-        <a href="#">Home</a>
-        <a href="#">About</a>
-        <a href="#">Services</a>
-        <a href="#">Contact</a>
+        <h2 class="Menu_Title">Menu</h2>
     </nav>
 
     <div class="overlay" id="overlay"></div>
 
     <div class="Top_Menu_Draggable">
-        <button class="Menu_Button" id="openMenu">
+        <button class="Menu_Button" id="openMenu" data-pressable_opacity>
             <img src="Images/Menu.png" alt="Menu" class="Menu_Icon">
         </button>
 
@@ -122,6 +118,7 @@
     </div>
 
     <script src="button_animation.js"></script>
+    <script src="button_animation_opacity.js"></script>
     <script src="user_input.js"></script>
     <script src="menu.js"></script>
 </body>
