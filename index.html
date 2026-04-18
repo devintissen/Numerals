@@ -25,29 +25,6 @@
 
         <div class="Draggable_Area"></div>
     </div>
-    
-
-    <script>
-        const openMenu = document.getElementById("openMenu");
-        const closeMenu = document.getElementById("closeMenu");
-        const sideMenu = document.getElementById("sideMenu");
-        const overlay = document.getElementById("overlay");
-
-        function openSideMenu() {
-        sideMenu.classList.add("open");
-        overlay.classList.add("active");
-        }
-
-        function closeSideMenu() {
-        sideMenu.classList.remove("open");
-        overlay.classList.remove("active");
-        }
-
-        openMenu.addEventListener("click", openSideMenu);
-        closeMenu.addEventListener("click", closeSideMenu);
-        overlay.addEventListener("click", closeSideMenu);
-    </script>
-
 
     <div class="Text_Input">
         <div class="history" id="history" aria-live="polite"></div>
@@ -146,5 +123,6 @@
 
     <script src="button_animation.js"></script>
     <script src="user_input.js"></script>
+    <script src="menu.js"></script>
 </body>
 </html>
