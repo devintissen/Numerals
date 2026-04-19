@@ -16,16 +16,22 @@
         <div class="Themes_Section">
             <h1 class="Menu_Subtitle">Themes</h1>
 
-            <button class="Themes_Selector_Button" data-pressable_opacity>
+            <button class="Themes_Selector_Button" data-pressable_opacity data-theme="light">
                 <h1 class="Themes_Selector_Title">Light Mode</h1>
+
+                <img src="Images/Checkmark.png" alt="Checkmark" class="Checkmark_Image">
             </button>
 
-            <button class="Themes_Selector_Button" data-pressable_opacity>
+            <button class="Themes_Selector_Button" data-pressable_opacity data-theme="dark">
                 <h1 class="Themes_Selector_Title">Dark Mode</h1>
+
+                <img src="Images/Checkmark.png" alt="Checkmark" class="Checkmark_Image">
             </button>
 
-            <button class="Themes_Selector_Button_NA" data-pressable_opacity>
+            <button class="Themes_Selector_Button" data-pressable_opacity disabled data-theme="liquid">
                 <h1 class="Themes_Selector_Title">Liquid Glass</h1>
+
+                <img src="Images/Checkmark.png" alt="Checkmark" class="Checkmark_Image">
             </button>
         </div>
     </nav>
@@ -139,5 +145,6 @@
     <script src="button_animation_opacity.js"></script>
     <script src="user_input.js"></script>
     <script src="menu.js"></script>
+    <script src="theme_selector.js"></script>
 </body>
 </html>
