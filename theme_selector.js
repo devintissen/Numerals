@@ -2,6 +2,7 @@ const themeOptions = document.querySelectorAll('.Themes_Selector_Button:not([dis
 
 function selectThemeButton(button) {
     const currentSelected = document.querySelector('.Themes_Selector_Button.selected');
+
     if (currentSelected) {
         currentSelected.classList.remove('selected');
         currentSelected.setAttribute('aria-pressed', 'false');
@@ -12,6 +13,7 @@ function selectThemeButton(button) {
 
     const selectedTheme = button.dataset.theme;
     document.body.setAttribute('data-theme', selectedTheme);
+
     console.log('Selected theme:', selectedTheme);
 }
 

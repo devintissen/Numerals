@@ -11,6 +11,7 @@ html, body {
     flex-direction: column;
     justify-content: end;
     align-items: end;
+    transition: 0.2s;
 
     /* overflow-x: hidden;
     overflow-y: hidden; */
@@ -43,7 +44,7 @@ html, body {
     height: calc(100% - 20px);
     background: rgb(224, 229, 236);
     transform: translateX(calc(-100% - 10px));
-    transition: transform 0.3s ease;
+    transition: transform 0.2s ease;
     padding-top:  40px;
     border-radius: 10px;
 
@@ -70,6 +71,7 @@ html, body {
     margin-right: 10px;
     font-family: sans-serif;
     overflow-wrap: anywhere;
+    color: black;
 }
 
 .display {
@@ -84,6 +86,7 @@ html, body {
     margin: 0px;
     padding: 0px;
     letter-spacing: 0.5px;
+    color: black;
 }
 
 [data-pressable] {
@@ -250,6 +253,7 @@ html, body {
     
     margin: 0px;
     padding: 0px;
+    color: black;
 }
 
 .Title_Icon {
@@ -372,7 +376,7 @@ html, body {
 }
 
 .Themes_Selector_Button.selected {
-    background-color: rgba(255, 255, 255, 0.12);
+    background-color: transparent;
 }
 
 .Themes_Selector_Button.selected .Checkmark_Image {
@@ -397,4 +401,61 @@ html, body {
     margin: 0px;
     margin-left: 10px;
     padding: 0px;
+}
+
+body[data-theme="dark"] {
+    background: rgb(45, 52, 62);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .side-menu{
+    background: rgb(45, 52, 62);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .Square_Button_Left {
+    background: rgb(45, 52, 62);
+    box-shadow:
+    -5px -5px 10px rgb(58, 66, 78),
+    5px  5px 10px rgb(25, 30, 38); 
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .Square_Button_Left_Wide {
+    background: rgb(45, 52, 62);
+    box-shadow:
+    -5px -5px 10px rgb(58, 66, 78),
+    5px  5px 10px rgb(25, 30, 38); 
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .Square_Button_Middle {
+    background: rgb(45, 52, 62);
+    box-shadow:
+    -5px -5px 10px rgb(58, 66, 78),
+    5px  5px 10px rgb(25, 30, 38); 
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .Square_Button_Right {
+    background: rgb(45, 52, 62);
+    box-shadow:
+    -5px -5px 10px rgb(58, 66, 78),
+    5px  5px 10px rgb(25, 30, 38); 
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .history {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .display {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .Number_Title {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
 }
