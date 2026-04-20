@@ -366,6 +366,27 @@ html, body {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 10px 0;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.Themes_Selector_Button.selected {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.Themes_Selector_Button.selected .Checkmark_Image {
+    opacity: 1;
+}
+
+.Checkmark_Image {
+    width: 15px;
+    height: 15px;
+
+    margin: 0px;
+    padding: 0px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 .Themes_Selector_Title {
@@ -375,13 +396,5 @@ html, body {
 
     margin: 0px;
     margin-left: 10px;
-    padding: 0px;
-}
-
-.Checkmark_Image {
-    width: 15px;
-    height: 15px;
-
-    margin: 0px;
     padding: 0px;
 }
