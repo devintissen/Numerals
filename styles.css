@@ -459,3 +459,23 @@ body[data-theme="dark"] .Number_Title {
     color: rgb(230, 235, 240);
     transition: 0.2s;
 }
+
+body[data-theme="dark"] .Menu_Title {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .Menu_Close {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .Menu_Subtitle {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .Themes_Selector_Title {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
+}
