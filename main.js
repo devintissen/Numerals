@@ -6,7 +6,6 @@ const createWindow = () => {
     height: 500,
     titleBarStyle: 'hidden', trafficLightPosition: { x: 15, y: 15 },
     resizable: false,
-    icon: 'Images/Icon.png',
   })
 
   win.loadFile('index.html')
@@ -14,8 +13,4 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow()
-
-  if (process.platform === 'darwin') {
-    app.dock.setIcon('Images/Icon.png')
-  }
 })
