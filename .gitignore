@@ -31,3 +31,30 @@ release/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local environment files (do NOT commit real secrets)
+.env.local
+.env.test
+.env.development.local
+.env.production.local
+
+# Cache folders
+.cache/
+
+# Certificates, keys, and signing files
+*.pem
+*.p12
+*.key
+*.crt
+*.csr
+
+# Common cloud/credentials config
+*.s3cfg
+*.aws-credentials
+
+# Electron / build outputs you may want to ignore
+dist-electron/
+release-builds/
+
+# macOS debug symbols
+*.dSYM

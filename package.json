@@ -11,6 +11,14 @@
   },
   "author": "Devin T",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FreddyFred12331/Numerals.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FreddyFred12331/Numerals/issues"
+  },
+  "homepage": "https://github.com/FreddyFred12331/Numerals#readme",
   "devDependencies": {
     "@electron-forge/cli": "^7.11.1",
     "@electron-forge/maker-deb": "^7.11.1",
