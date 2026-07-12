@@ -1,4 +1,4 @@
-## MacOS Calculator
+## Numerals
 
 A minimalist calculator inspired by the macOS Calculator, featuring a cleaner interface and familiar functionality.
 
