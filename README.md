@@ -30,8 +30,8 @@ https://nodejs.org/
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/macos-calculator.git
-cd macos-calculator
+git clone https://github.com/devintissen/Numerals.git
+cd Numerals
 ```
 
 ### Install Dependencies
