@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "electron-forge start",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
@@ -35,6 +35,11 @@
     "@electron-forge/plugin-fuses": "^7.11.2",
     "@electron/fuses": "^1.8.0",
     "electron": "^41.10.2"
+  },
+  "overrides": {
+    "@electron/rebuild": "^4.2.0",
+    "tar": "^7.5.20",
+    "tmp": "^0.2.6"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1"

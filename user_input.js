@@ -1,11 +1,12 @@
-const display = document.getElementById('display');
-const history = document.getElementById('history');
-const buttons = Array.from(document.querySelectorAll('button'));
+const display = typeof document !== 'undefined' ? document.getElementById('display') : null;
+const history = typeof document !== 'undefined' ? document.getElementById('history') : null;
+const buttons = typeof document !== 'undefined' ? Array.from(document.querySelectorAll('button')) : [];
 
 let expression = '0';
 let justEvaluated = false;
 
 function updateDisplay() {
+    if (!display) return;
     display.value = formatForDisplay(expression);
 }
 
@@ -35,7 +36,7 @@ function getLastNumberSegment(expr) {
 function appendValue(value) {
     if (justEvaluated && !isOperator(value)) {
     expression = '0';
-    history.textContent = '';
+    if (history) history.textContent = '';
     }
     justEvaluated = false;
 
@@ -86,7 +87,7 @@ function appendValue(value) {
 
 function clearAll() {
     expression = '0';
-    history.textContent = '';
+    if (history) history.textContent = '';
     justEvaluated = false;
     updateDisplay();
 }
@@ -127,6 +128,143 @@ function normalizePercent(expr) {
     return expr.replace(/(\d*\.?\d+)%/g, '($1/100)');
 }
 
+function tokenizeExpression(expr) {
+    const tokens = [];
+    let index = 0;
+
+    while (index < expr.length) {
+    const char = expr[index];
+
+    if (/\s/.test(char)) {
+        index += 1;
+        continue;
+    }
+
+    if (/\d/.test(char) || char === '.') {
+        let numberText = '';
+        let sawDot = false;
+
+        while (index < expr.length) {
+        const current = expr[index];
+        if (/\d/.test(current)) {
+            numberText += current;
+            index += 1;
+            continue;
+        }
+        if (current === '.' && !sawDot) {
+            numberText += current;
+            sawDot = true;
+            index += 1;
+            continue;
+        }
+        break;
+        }
+
+        if (!numberText || numberText === '.') {
+        throw new Error('Invalid expression');
+        }
+
+        tokens.push({ type: 'number', value: Number(numberText) });
+        continue;
+    }
+
+    if (char === '(' || char === ')') {
+        tokens.push({ type: 'paren', value: char });
+        index += 1;
+        continue;
+    }
+
+    if (['+', '-', '*', '/'].includes(char)) {
+        tokens.push({ type: 'operator', value: char });
+        index += 1;
+        continue;
+    }
+
+    throw new Error('Invalid expression');
+    }
+
+    return tokens;
+}
+
+function evaluateExpressionString(raw) {
+    const tokens = tokenizeExpression(raw);
+    let index = 0;
+
+    function peek() {
+    return tokens[index] || null;
+    }
+
+    function consume(expectedValue) {
+    const token = peek();
+    if (!token) {
+        throw new Error('Invalid expression');
+    }
+    if (expectedValue && token.value !== expectedValue) {
+        throw new Error('Invalid expression');
+    }
+    index += 1;
+    return token;
+    }
+
+    function parseExpression() {
+    let value = parseTerm();
+    while (peek() && peek().type === 'operator' && ['+', '-'].includes(peek().value)) {
+        const operator = consume().value;
+        const rhs = parseTerm();
+        value = operator === '+' ? value + rhs : value - rhs;
+    }
+    return value;
+    }
+
+    function parseTerm() {
+    let value = parseFactor();
+    while (peek() && peek().type === 'operator' && ['*', '/'].includes(peek().value)) {
+        const operator = consume().value;
+        const rhs = parseFactor();
+        if (operator === '*') {
+        value *= rhs;
+        } else {
+        if (rhs === 0) throw new Error('Math error');
+        value /= rhs;
+        }
+    }
+    return value;
+    }
+
+    function parseFactor() {
+    const token = peek();
+    if (!token) {
+        throw new Error('Invalid expression');
+    }
+
+    if (token.type === 'operator' && (token.value === '+' || token.value === '-')) {
+        const operator = consume().value;
+        const value = parseFactor();
+        return operator === '-' ? -value : value;
+    }
+
+    if (token.type === 'paren' && token.value === '(') {
+        consume('(');
+        const value = parseExpression();
+        consume(')');
+        return value;
+    }
+
+    if (token.type === 'number') {
+        return consume().value;
+    }
+
+    throw new Error('Invalid expression');
+    }
+
+    const result = parseExpression();
+    if (peek()) {
+    throw new Error('Invalid expression');
+    }
+
+    return result;
+}
+
 function evaluateExpression() {
     try {
     let raw = sanitizeExpression(expression);
@@ -136,25 +274,25 @@ function evaluateExpression() {
         throw new Error('Invalid characters');
     }
 
-    if (/[*+/\-.]$/.test(raw)) {
+    if (/[*+\/\-.]$/.test(raw)) {
         raw = raw.slice(0, -1);
     }
 
     if (!raw.trim()) return;
 
-    const result = Function(`"use strict"; return (${raw})`)();
+    const result = evaluateExpressionString(raw);
 
     if (!Number.isFinite(result)) {
         throw new Error('Math error');
     }
 
     const cleaned = Number(result.toFixed(10)).toString();
-    history.textContent = `${formatForDisplay(expression)} =`;
+    if (history) history.textContent = `${formatForDisplay(expression)} =`;
     expression = cleaned;
     justEvaluated = true;
     updateDisplay();
     } catch {
-    display.value = 'Error';
+    if (display) display.value = 'Error';
     expression = '0';
     justEvaluated = true;
     }
@@ -188,7 +326,8 @@ function findButtonByKey(key) {
     return selector ? document.querySelector(selector) : null;
 }
 
-document.body.addEventListener('click', (event) => {
+if (typeof document !== 'undefined' && document.body) {
+    document.body.addEventListener('click', (event) => {
     const button = event.target.closest('button');
     if (!button) return;
 
@@ -199,42 +338,51 @@ document.body.addEventListener('click', (event) => {
     if (action === 'delete') deleteLast();
     if (action === 'sign') toggleSign();
     if (action === 'equals') evaluateExpression();
-});
+    });
 
-document.addEventListener('keydown', (event) => {
+    document.addEventListener('keydown', (event) => {
     const key = event.key;
     const visualButton = findButtonByKey(key);
     if (visualButton) pressVisual(visualButton);
 
     if (/^[0-9]$/.test(key)) {
-    appendValue(key);
-    return;
+        appendValue(key);
+        return;
     }
 
     if (['+', '-', '*', '/', '%', '.'].includes(key)) {
-    appendValue(key);
-    return;
+        appendValue(key);
+        return;
     }
 
     if (key === 'Enter' || key === '=') {
-    event.preventDefault();
-    evaluateExpression();
-    return;
+        event.preventDefault();
+        evaluateExpression();
+        return;
     }
 
     if (key === 'Backspace') {
-    event.preventDefault();
-    deleteLast();
-    return;
+        event.preventDefault();
+        deleteLast();
+        return;
     }
 
     if (key === 'Escape') {
-    clearAll();
+        clearAll();
     }
 
     if (key === 'c') {
-    clearAll();
+        clearAll();
     }
-});
+    });
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { evaluateExpressionString, normalizePercent, sanitizeExpression };
+}
+
+if (typeof window !== 'undefined') {
+    window.NumeralsSafeEvaluator = { evaluateExpressionString, normalizePercent, sanitizeExpression };
+}
 
 updateDisplay();
