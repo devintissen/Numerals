@@ -4,7 +4,6 @@ A minimalist calculator inspired by the macOS Calculator, featuring a cleaner in
 
 ![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white)
 ![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Screenshots
 <img width="49%" alt="Cropped - Light Mode" src="https://github.com/user-attachments/assets/00bd38b3-d6c4-45ab-b099-146254e22bf2" />
@@ -53,6 +52,11 @@ The calculator will launch as a native desktop application.
 - HTML
 - CSS
 - JavaScript
+
+## License
+
+Numerals is licensed under the Numerals License. Commercial use or redistribution
+requires permission from the copyright holder.
 
 ## Notes:
 
