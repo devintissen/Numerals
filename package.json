@@ -15,7 +15,7 @@
     "make": "electron-forge make"
   },
   "author": "Devin T",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
     "url": "https://github.com/FreddyFred12331/Numerals.git"
