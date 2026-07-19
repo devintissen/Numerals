@@ -18,12 +18,12 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "https://github.com/FreddyFred12331/Numerals.git"
+    "url": "https://github.com/devintissen/Numerals.git"
   },
   "bugs": {
-    "url": "https://github.com/FreddyFred12331/Numerals/issues"
+    "url": "https://github.com/devintissen/Numerals/issues"
   },
-  "homepage": "https://github.com/FreddyFred12331/Numerals#readme",
+  "homepage": "https://github.com/devintissen/Numerals#readme",
   "devDependencies": {
     "@electron-forge/cli": "^7.11.2",
     "@electron-forge/maker-deb": "^7.11.2",
