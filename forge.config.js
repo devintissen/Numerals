@@ -8,10 +8,10 @@ module.exports = {
   },
   rebuildConfig: {},
   makers: [
-    {
-      name: '@electron-forge/maker-dmg',
+      {
+      name: "@electron-forge/maker-dmg",
       config: {
-        format: 'ULFO' 
+        format: "ULFO"
       }
     },
     {
