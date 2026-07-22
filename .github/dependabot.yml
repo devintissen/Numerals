@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "npm" # Tells it to check your Electron/Node packages
+    directory: "/"           # Looks in your main folder for package.json
+    schedule:
+      interval: "weekly"     # Checks for updates once a week (prevents spam)
