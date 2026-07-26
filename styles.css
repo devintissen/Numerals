@@ -12,9 +12,6 @@ html, body {
     justify-content: end;
     align-items: end;
     transition: 0.2s;
-
-    /* overflow-x: hidden;
-    overflow-y: hidden; */
 }
 
 .overlay {
@@ -34,7 +31,6 @@ html, body {
     transition: 0.2s;
 }
 
-/* Side menu */
 .side-menu {
     position: fixed;
     top: 0;
