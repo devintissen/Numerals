@@ -15,7 +15,7 @@
     "make": "electron-forge make"
   },
   "author": "Devin T",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/devintissen/Numerals.git"
@@ -34,7 +34,7 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.11.2",
     "@electron-forge/plugin-fuses": "^7.11.2",
     "@electron/fuses": "^1.8.0",
-    "electron": "^41.10.2"
+    "electron": "^41.10.3"
   },
   "overrides": {
     "@electron/rebuild": "^4.2.0",
