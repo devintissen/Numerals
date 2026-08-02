@@ -1,5 +1,5 @@
 {
-  "name": "Numerals",
+  "name": "numerals",
   "version": "1.0.0",
   "description": "Minimalistic Calculator",
   "main": "main.js",
@@ -13,6 +13,8 @@
     "test": "node --test",
     "package": "electron-forge package",
     "make": "electron-forge make"
+  ,
+    "audit:prod": "npm audit --omit=dev"
   },
   "author": "Devin T",
   "license": "MIT",
@@ -38,7 +40,11 @@
     "@electron/asar": "4.2.1",
     "@electron/universal": "3.0.6",
     "tar": "7.5.22",
-    "tmp": "^0.2.6"
+    "tmp": "^0.2.6",
+    "minimatch": "9.0.1",
+    "brace-expansion": "1.1.14"
   },
-  "dependencies": {}
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
+  }
 }

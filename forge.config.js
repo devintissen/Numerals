@@ -1,11 +1,27 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 
+// Construct optional macOS signing/notarization config only when the
+// required environment variables are provided. Avoid inserting explicit
+// `null` values because Forge's config utilities iterate object keys and
+// may assume objects exist.
+const osxSignConfig = process.env.MACOS_SIGNING_ID
+  ? { identity: process.env.MACOS_SIGNING_ID }
+  : undefined;
+
+const osxNotarizeConfig = process.env.APPLEID && process.env.APPLEID_PASSWORD
+  ? { appleId: process.env.APPLEID, appleIdPassword: process.env.APPLEID_PASSWORD }
+  : undefined;
+
 module.exports = {
-  packagerConfig: {
-    asar: true,
-    icon: 'assets/icon.icns',
-  },
+  packagerConfig: Object.assign(
+    {
+      asar: true,
+      icon: 'assets/icon.icns',
+    },
+    osxSignConfig ? { osxSign: osxSignConfig } : {},
+    osxNotarizeConfig ? { osxNotarize: osxNotarizeConfig } : {}
+  ),
   rebuildConfig: {},
   makers: [
       {

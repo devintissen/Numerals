@@ -60,4 +60,4 @@ Numerals is licensed under the [MIT License](LICENSE).
 
 ## Notes:
 
-Currently this application only works on MacOS, however a Windows and Linux version is in the works. 
+Currently this application has been tested on macOS. Windows and Linux builds are experimental — see [forge.config.js](forge.config.js) and the CI workflow for packaging and smoke-test details.

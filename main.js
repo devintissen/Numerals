@@ -1,4 +1,19 @@
+const path = require('node:path')
 const { app, BrowserWindow, session } = require('electron')
+
+// Handle Windows Squirrel install/uninstall events gracefully, if the
+// optional `electron-squirrel-startup` package is present. This prevents
+// the app from continuing to launch during install/update events.
+try {
+  // Require is wrapped in try/catch so absence of the package won't break
+  // development or other packaging flows.
+  const squirrelStartup = require('electron-squirrel-startup');
+  if (squirrelStartup) {
+    app.quit();
+  }
+} catch (e) {
+  // Optional dependency not installed — ignore.
+}
 
 const isDev = !app.isPackaged
 
@@ -58,7 +73,11 @@ const createWindow = () => {
     })
   }
 
-  win.loadFile('index.html')
+  const appPath = app.isPackaged
+    ? path.join(process.resourcesPath, 'app.asar')
+    : app.getAppPath()
+
+  win.loadFile(path.join(appPath, 'index.html'))
 }
 
 app.whenReady().then(() => {
