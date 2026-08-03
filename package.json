@@ -1,8 +1,18 @@
 {
   "name": "numerals",
   "version": "1.0.0",
-  "description": "Minimalistic Calculator",
+  "private": false,
+  "description": "Minimalistic calculator for macOS and desktop environments",
+  "keywords": [
+    "electron",
+    "calculator",
+    "desktop-app",
+    "macos"
+  ],
   "main": "main.js",
+  "engines": {
+    "node": ">=18"
+  },
   "build": {
     "mac": {
       "icon": "assets/icon.icns"
@@ -12,8 +22,7 @@
     "start": "electron-forge start",
     "test": "node --test",
     "package": "electron-forge package",
-    "make": "electron-forge make"
-  ,
+    "make": "electron-forge make",
     "audit:prod": "npm audit --omit=dev"
   },
   "author": "Devin T",

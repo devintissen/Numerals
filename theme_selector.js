@@ -50,8 +50,6 @@ function selectThemeButton(button) {
 
     // Save the selected theme to localStorage
     localStorage.setItem('selectedTheme', selectedTheme);
-
-    console.log('Selected theme:', selectedTheme);
 }
 
 themeOptions.forEach(option => {
