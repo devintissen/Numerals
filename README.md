@@ -60,4 +60,28 @@ Numerals is licensed under the [MIT License](LICENSE).
 
 ## Notes:
 
-Currently this application has been tested on macOS. Windows and Linux builds are experimental — see [forge.config.js](forge.config.js) and the CI workflow for packaging and smoke-test details.
+Currently this application only runs on macOS, however a Windows and Linux version is currently in the works.
+
+### macOS Security Notes
+
+Current releases of Numerals are **not yet signed or notarized by Apple**.
+
+When opening the application for the first time, macOS may display a warning that the app cannot be verified because it is from an unidentified developer.
+
+This does **not** indicate that the application is malicious. It simply means that Apple Developer code signing and notarization have not yet been completed.
+
+To run the application:
+
+1. Move **Numerals.app** to your **Applications** folder.
+2. Open **Terminal**.
+3. Run the following command:
+
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/Numerals.app
+   ```
+   *This command only needs to be run once. Afterward, Numerals will open normally.
+
+4. Press **Enter**.
+5. Open Numerals normally.
+
+
