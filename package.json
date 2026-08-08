@@ -51,7 +51,9 @@
     "tar": "7.5.22",
     "tmp": "^0.2.6",
     "minimatch": "9.0.1",
-    "brace-expansion": "1.1.14"
+    "brace-expansion": "1.1.14",
+    "node-gyp": "^12.2.0",
+    "semver": "^7.6.3"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0"
