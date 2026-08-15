@@ -51,7 +51,7 @@
     "tar": "7.5.22",
     "tmp": "^0.2.6",
     "minimatch": "9.0.7",
-    "brace-expansion": "2.1.2",
+    "brace-expansion": "2.1.4",
     "node-gyp": "^12.2.0",
     "semver": "^7.6.3"
   },
