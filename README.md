@@ -21,7 +21,7 @@ A minimalist calculator inspired by the macOS Calculator, featuring a cleaner in
 
 Before getting started, make sure you have the following installed:
 
-- Node.js (v18 or later recommended)
+- Node.js 20 LTS or 22+
 - npm (comes with Node.js)
 
 You can download Node.js from:
@@ -83,5 +83,4 @@ To run the application:
 
 4. Press **Enter**.
 5. Open Numerals normally.
-
 
