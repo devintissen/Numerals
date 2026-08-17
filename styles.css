@@ -114,7 +114,7 @@ body[data-theme="dark"] [data-pressable].pressed {
     width: 100%;
     height: 50px;
 
-    app-region: drag;
+    -webkit-app-region: drag;
 }
 
 .Top_Menu_Draggable {
