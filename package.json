@@ -37,7 +37,7 @@
   "homepage": "https://github.com/devintissen/Numerals#readme",
   "devDependencies": {
     "@electron-forge/cli": "^7.11.2",
-    "@electron-forge/maker-dmg": "^7.11.2",
+    "@electron-forge/maker-dmg": "^8.0.1",
     "@electron-forge/maker-zip": "^7.11.2",
     "@electron-forge/plugin-auto-unpack-natives": "^7.11.2",
     "@electron-forge/plugin-fuses": "^7.11.2",
