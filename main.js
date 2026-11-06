@@ -72,13 +72,10 @@ const createWindow = () => {
   // Prevent opening new windows
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
 
-  // Prevent navigation away from the local application
-  win.webContents.on('will-navigate', (event, navigationUrl) => {
-    const parsedUrl = new URL(navigationUrl)
-
-    if (parsedUrl.protocol !== 'file:') {
-      event.preventDefault()
-    }
+  // Numerals is a single local page, so it never needs to navigate anywhere.
+  // Blocking every navigation also stops other file:// pages from loading.
+  win.webContents.on('will-navigate', (event) => {
+    event.preventDefault()
   })
 
   // Deny all permission requests
