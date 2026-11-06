@@ -1,7 +1,15 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { evaluateExpressionString, normalizePercent, sanitizeExpression } = require('../user_input.js');
+const {
+  evaluateExpressionString,
+  normalizePercent,
+  sanitizeExpression,
+  appendValue,
+  clearAll,
+  getExpression,
+  MAX_EXPRESSION_LENGTH,
+} = require('../user_input.js');
 
 test('parses basic arithmetic safely', () => {
   assert.equal(evaluateExpressionString('2+3*4'), 14);
@@ -31,4 +39,14 @@ test('rejects malformed expressions', () => {
 
 test('reports division by zero to the caller', () => {
   assert.throws(() => evaluateExpressionString('10/0'), /Math error/);
+});
+
+test('stops accepting input at the maximum expression length', () => {
+  clearAll();
+  for (let i = 0; i < MAX_EXPRESSION_LENGTH + 50; i += 1) {
+    appendValue('1');
+  }
+  assert.equal(getExpression().length, MAX_EXPRESSION_LENGTH);
+  clearAll();
+  assert.equal(getExpression(), '0');
 });
