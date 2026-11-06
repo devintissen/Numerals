@@ -112,8 +112,11 @@ const createWindow = () => {
   if (!isMac) {
     const onThemeChanged = (event, theme) => {
       if (event.sender !== win.webContents) return
+      // Only accept the theme names defined above, never inherited object keys.
+      if (typeof theme !== 'string' || !Object.hasOwn(TITLE_BAR_OVERLAY_THEMES, theme)) return
+      if (win.isDestroyed()) return
+
       const overlay = TITLE_BAR_OVERLAY_THEMES[theme]
-      if (!overlay || win.isDestroyed()) return
 
       win.setTitleBarOverlay({ ...overlay, height: TITLE_BAR_OVERLAY_HEIGHT })
     }
