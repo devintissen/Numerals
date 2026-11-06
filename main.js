@@ -88,6 +88,9 @@ const createWindow = () => {
     }
   )
 
+  // Also answer "no" when a page only checks whether a permission is granted
+  session.defaultSession.setPermissionCheckHandler(() => false)
+
   if (!isDev) {
     // Prevent opening DevTools via keyboard shortcuts
     win.webContents.on('before-input-event', (event, input) => {
