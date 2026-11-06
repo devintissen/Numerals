@@ -48,6 +48,11 @@ function selectThemeButton(button) {
     // Update images based on the selected theme
     updateImagesForTheme(selectedTheme);
 
+    // Match the native Windows minimize/close button colors to the theme
+    if (window.windowControls) {
+        window.windowControls.setTheme(selectedTheme);
+    }
+
     // Save the selected theme to localStorage
     localStorage.setItem('selectedTheme', selectedTheme);
 }

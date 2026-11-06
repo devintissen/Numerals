@@ -1,5 +1,5 @@
 const path = require('node:path')
-const { app, BrowserWindow, session } = require('electron')
+const { app, BrowserWindow, session, ipcMain } = require('electron')
 
 // Handle Windows Squirrel install/uninstall events gracefully, if the
 // optional `electron-squirrel-startup` package is present. This prevents
@@ -16,15 +16,50 @@ try {
 }
 
 const isDev = !app.isPackaged
+const isMac = process.platform === 'darwin'
+
+// Height (in DIPs) of the native caption-button strip on Windows/Linux.
+// Kept below the menu button (which sits at y = 40px) so the native
+// minimize/close buttons never overlap the app's own controls.
+const TITLE_BAR_OVERLAY_HEIGHT = 40
+
+// Native caption-button symbol colors for each app theme. The button
+// background stays transparent so the buttons sit directly on the app's UI,
+// the same way the macOS traffic lights do.
+const TITLE_BAR_OVERLAY_THEMES = {
+  light: { color: '#00000000', symbolColor: '#000000' },
+  dark: { color: '#00000000', symbolColor: '#E6EBF0' },
+}
+
+// Platform-specific frame options:
+// - macOS: hidden title bar with inset traffic lights.
+// - Windows/Linux: hidden title bar (no default Windows 11 frame/caption)
+//   with Window Controls Overlay, which draws the native minimize/close
+//   buttons on top of the web content in the top-right corner.
+const frameOptions = isMac
+  ? {
+      titleBarStyle: 'hidden',
+      trafficLightPosition: { x: 15, y: 15 },
+    }
+  : {
+      titleBarStyle: 'hidden',
+      titleBarOverlay: {
+        ...TITLE_BAR_OVERLAY_THEMES.light,
+        height: TITLE_BAR_OVERLAY_HEIGHT,
+      },
+    }
 
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 290,
     height: 500,
-    titleBarStyle: 'hidden',
-    trafficLightPosition: { x: 15, y: 15 },
+    ...frameOptions,
     resizable: false,
+    // Fixed-size calculator: no maximize button on Windows either.
+    maximizable: false,
+    fullscreenable: false,
     webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
       devTools: isDev,
       nodeIntegration: false,
       contextIsolation: true,
@@ -70,6 +105,22 @@ const createWindow = () => {
     // Close DevTools if somehow opened
     win.webContents.on('devtools-opened', () => {
       win.webContents.closeDevTools()
+    })
+  }
+
+  // Keep the native Windows caption-button symbols in sync with the app theme.
+  if (!isMac) {
+    const onThemeChanged = (event, theme) => {
+      if (event.sender !== win.webContents) return
+      const overlay = TITLE_BAR_OVERLAY_THEMES[theme]
+      if (!overlay || win.isDestroyed()) return
+
+      win.setTitleBarOverlay({ ...overlay, height: TITLE_BAR_OVERLAY_HEIGHT })
+    }
+
+    ipcMain.on('window-controls:theme', onThemeChanged)
+    win.on('closed', () => {
+      ipcMain.removeListener('window-controls:theme', onThemeChanged)
     })
   }
 
