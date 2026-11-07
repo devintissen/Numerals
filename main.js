@@ -1,5 +1,42 @@
 const path = require('node:path')
-const { app, BrowserWindow, session, ipcMain } = require('electron')
+const { pathToFileURL } = require('node:url')
+const { app, BrowserWindow, session, ipcMain, protocol, net } = require('electron')
+
+// Serve the app from app://numerals/ instead of file://. A file:// page can
+// reach other files on disk, while this handler only ever returns files from
+// inside the app's own folder (or app.asar when packaged).
+const APP_SCHEME = 'app'
+const APP_HOST = 'numerals'
+
+protocol.registerSchemesAsPrivileged([
+  { scheme: APP_SCHEME, privileges: { standard: true, secure: true } },
+])
+
+function registerAppProtocol() {
+  const appRoot = app.getAppPath()
+
+  protocol.handle(APP_SCHEME, (request) => {
+    const { host, pathname } = new URL(request.url)
+    if (host !== APP_HOST) {
+      return new Response('Not found', { status: 404 })
+    }
+
+    let relativePath
+    try {
+      relativePath = decodeURIComponent(pathname)
+    } catch {
+      return new Response('Bad request', { status: 400 })
+    }
+
+    const filePath = path.join(appRoot, relativePath)
+    const fromRoot = path.relative(appRoot, filePath)
+    if (fromRoot.startsWith('..') || path.isAbsolute(fromRoot)) {
+      return new Response('Not found', { status: 404 })
+    }
+
+    return net.fetch(pathToFileURL(filePath).toString())
+  })
+}
 
 // Handle Windows Squirrel install/uninstall events gracefully, if the
 // optional `electron-squirrel-startup` package is present. This prevents
@@ -127,14 +164,11 @@ const createWindow = () => {
     })
   }
 
-  const appPath = app.isPackaged
-    ? path.join(process.resourcesPath, 'app.asar')
-    : app.getAppPath()
-
-  win.loadFile(path.join(appPath, 'index.html'))
+  win.loadURL(`${APP_SCHEME}://${APP_HOST}/index.html`)
 }
 
 app.whenReady().then(() => {
+  registerAppProtocol()
   createWindow()
 
   // Recreate a window when the dock icon is clicked (macOS)

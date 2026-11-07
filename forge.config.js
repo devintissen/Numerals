@@ -56,6 +56,9 @@ module.exports = {
       [FuseV1Options.EnableNodeCliInspectArguments]: false,
       [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
+      // The app is served from app:// (see main.js), so file:// pages don't
+      // need the extra access Electron gives them by default.
+      [FuseV1Options.GrantFileProtocolExtraPrivileges]: false,
     }),
   ],
 };
