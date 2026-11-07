@@ -4,3 +4,7 @@ updates:
     directory: "/"           # Looks in your main folder for package.json
     schedule:
       interval: "weekly"     # Checks for updates once a week (prevents spam)
+  - package-ecosystem: "github-actions" # Keeps the pinned workflow actions up to date
+    directory: "/"
+    schedule:
+      interval: "weekly"
