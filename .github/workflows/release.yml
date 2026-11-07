@@ -1,0 +1,96 @@
+name: Release
+
+# Push a version tag (for example `git tag v1.1.0 && git push origin v1.1.0`)
+# to build Numerals for macOS and Windows on GitHub's machines. The result is a
+# DRAFT release with the files and their SHA-256 checksums attached. Nothing is
+# public until you review the draft and press Publish.
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          # No dependency cache here: release builds always start from a clean install.
+
+      - name: Check the tag matches package.json
+        shell: bash
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "Tag $TAG does not match package.json version $VERSION"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build distributables
+        run: npm run make
+
+      - name: Upload build
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: numerals-${{ matrix.os }}
+          path: |
+            out/make/**/*.zip
+            out/make/**/*.dmg
+          if-no-files-found: error
+
+  draft-release:
+    name: Create draft release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # needed only here, to create the draft release
+    steps:
+      - name: Download builds
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create draft release with checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          mkdir release
+          find dist -type f \( -name '*.zip' -o -name '*.dmg' \) -exec cp {} release/ \;
+          cd release
+          sha256sum * > SHA256SUMS.txt
+          {
+            echo "## Checksums (SHA-256)"
+            echo
+            echo "Compare these with your download. See the README for how."
+            echo
+            echo '```'
+            cat SHA256SUMS.txt
+            echo '```'
+          } > ../notes.md
+          gh release create "$TAG" --draft --verify-tag --title "Numerals $TAG" --notes-file ../notes.md ./*
