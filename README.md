@@ -70,17 +70,24 @@ When opening the application for the first time, macOS may display a warning tha
 
 This does **not** indicate that the application is malicious. It simply means that Apple Developer code signing and notarization have not yet been completed.
 
-To run the application:
+Only download Numerals from the [Releases page](https://github.com/devintissen/Numerals/releases) of this repository. Copies from anywhere else may have been changed.
+
+### Check your download
+
+Each release lists a SHA-256 checksum for every file. After downloading, open **Terminal** and run:
+
+```bash
+shasum -a 256 ~/Downloads/<file you downloaded>
+```
+
+The long code it prints must match the one in the release notes exactly. If it doesn't, delete the file and don't open it.
+
+### Open the app
 
 1. Move **Numerals.app** to your **Applications** folder.
-2. Open **Terminal**.
-3. Run the following command:
+2. Open Numerals. macOS will warn that it can't verify the developer. Click **Done** (or **OK**).
+3. Open **System Settings → Privacy & Security**, scroll down to the message about Numerals, and click **Open Anyway**.
+4. Confirm with your password. After this, Numerals opens normally.
 
-   ```bash
-   xattr -dr com.apple.quarantine /Applications/Numerals.app
-   ```
-   *This command only needs to be run once. Afterward, Numerals will open normally.
-
-4. Press **Enter**.
-5. Open Numerals normally.
+This is Apple's supported way to open an app from an unidentified developer. Please don't remove the quarantine flag with `xattr` instead: that skips Gatekeeper's check and its warning entirely.
 
