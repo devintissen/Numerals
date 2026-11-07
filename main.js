@@ -109,13 +109,10 @@ const createWindow = () => {
   // Prevent opening new windows
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
 
-  // Prevent navigation away from the local application
-  win.webContents.on('will-navigate', (event, navigationUrl) => {
-    const parsedUrl = new URL(navigationUrl)
-
-    if (parsedUrl.protocol !== `${APP_SCHEME}:` || parsedUrl.host !== APP_HOST) {
-      event.preventDefault()
-    }
+  // Numerals is a single local page, so it never needs to navigate anywhere.
+  // Blocking every navigation also stops other file:// pages from loading.
+  win.webContents.on('will-navigate', (event) => {
+    event.preventDefault()
   })
 
   // Deny all permission requests
@@ -124,6 +121,9 @@ const createWindow = () => {
       callback(false)
     }
   )
+
+  // Also answer "no" when a page only checks whether a permission is granted
+  session.defaultSession.setPermissionCheckHandler(() => false)
 
   if (!isDev) {
     // Prevent opening DevTools via keyboard shortcuts
@@ -149,8 +149,11 @@ const createWindow = () => {
   if (!isMac) {
     const onThemeChanged = (event, theme) => {
       if (event.sender !== win.webContents) return
+      // Only accept the theme names defined above, never inherited object keys.
+      if (typeof theme !== 'string' || !Object.hasOwn(TITLE_BAR_OVERLAY_THEMES, theme)) return
+      if (win.isDestroyed()) return
+
       const overlay = TITLE_BAR_OVERLAY_THEMES[theme]
-      if (!overlay || win.isDestroyed()) return
 
       win.setTitleBarOverlay({ ...overlay, height: TITLE_BAR_OVERLAY_HEIGHT })
     }
