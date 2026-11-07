@@ -9,9 +9,16 @@ const osxSignConfig = process.env.MACOS_SIGNING_ID
   ? { identity: process.env.MACOS_SIGNING_ID }
   : undefined;
 
-const osxNotarizeConfig = process.env.APPLEID && process.env.APPLEID_PASSWORD
-  ? { appleId: process.env.APPLEID, appleIdPassword: process.env.APPLEID_PASSWORD }
-  : undefined;
+// Apple's notarization service needs the Team ID as well as the Apple ID and
+// app-specific password. Keep all three in environment variables, never in code.
+const osxNotarizeConfig =
+  process.env.APPLEID && process.env.APPLEID_PASSWORD && process.env.APPLE_TEAM_ID
+    ? {
+        appleId: process.env.APPLEID,
+        appleIdPassword: process.env.APPLEID_PASSWORD,
+        teamId: process.env.APPLE_TEAM_ID,
+      }
+    : undefined;
 
 module.exports = {
   packagerConfig: Object.assign(
