@@ -2,6 +2,9 @@ const display = typeof document !== 'undefined' ? document.getElementById('displ
 const history = typeof document !== 'undefined' ? document.getElementById('history') : null;
 const buttons = typeof document !== 'undefined' ? Array.from(document.querySelectorAll('button')) : [];
 
+// Long inputs make the number-matching regexes below very slow, so cap the length.
+const MAX_EXPRESSION_LENGTH = 256;
+
 let expression = '0';
 let justEvaluated = false;
 
@@ -28,11 +31,6 @@ function isOperator(char) {
     return ['+', '-', '*', '/', '%'].includes(char);
 }
 
-function getLastNumberSegment(expr) {
-    const match = expr.match(/(-?\d*\.?\d+)$/);
-    return match ? match[0] : '';
-}
-
 function appendValue(value) {
     if (justEvaluated && !isOperator(value)) {
     expression = '0';
@@ -40,10 +38,18 @@ function appendValue(value) {
     }
     justEvaluated = false;
 
+    if (expression.length >= MAX_EXPRESSION_LENGTH) return;
+
+    // A number typed straight after a percent (e.g. "9%5") means multiply.
+    if (expression.slice(-1) === '%' && (/^\d$/.test(value) || value === '.')) {
+    expression += '*';
+    }
+
     if (value === '.') {
-    const lastSegment = getLastNumberSegment(expression);
+    // Include a trailing "." so "0." can't become "0..".
+    const lastSegment = expression.match(/[\d.]*$/)[0];
     if (lastSegment.includes('.')) return;
-    if (expression === '0' || isOperator(expression.slice(-1)) || expression.slice(-1) === '%') {
+    if (expression === '0' || isOperator(expression.slice(-1))) {
         expression += expression === '0' ? '.' : '0.';
         if (expression === '0.') expression = '0.';
         updateDisplay();
@@ -109,7 +115,16 @@ function toggleSign() {
     const match = expression.match(/(-?\d*\.?\d+)%?$/);
     if (!match) return;
 
-    const target = match[0];
+    let target = match[0];
+
+    // In "5-3" the "-" is the subtraction sign, not part of the 3. Only treat
+    // a leading "-" as the number's own sign when an operator (or nothing)
+    // comes before it.
+    const charBefore = expression.charAt(match.index - 1);
+    if (target.startsWith('-') && /[\d.%]/.test(charBefore)) {
+    target = target.slice(1);
+    }
+
     const hasPercent = target.endsWith('%');
     const numberPart = hasPercent ? target.slice(0, -1) : target;
 
@@ -378,7 +393,17 @@ if (typeof document !== 'undefined' && document.body) {
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { evaluateExpressionString, normalizePercent, sanitizeExpression };
+    module.exports = {
+    evaluateExpressionString,
+    normalizePercent,
+    sanitizeExpression,
+    appendValue,
+    clearAll,
+    toggleSign,
+    evaluateExpression,
+    getExpression: () => expression,
+    MAX_EXPRESSION_LENGTH,
+    };
 }
 
 if (typeof window !== 'undefined') {
