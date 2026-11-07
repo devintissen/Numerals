@@ -1,3 +1,6 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 
@@ -29,6 +32,35 @@ module.exports = {
     osxNotarizeConfig ? { osxNotarize: osxNotarizeConfig } : {}
   ),
   rebuildConfig: {},
+  hooks: {
+    // Without a Developer ID, packaging leaves the app with a broken
+    // signature, and macOS on Apple Silicon reports it as "damaged" with no
+    // way to open it. An ad-hoc signature (`-`) makes the signature valid
+    // again, so macOS shows its normal "could not verify" warning instead,
+    // and users can approve the app with Open Anyway. It is not a substitute
+    // for a Developer ID signature and notarization.
+    postPackage: async (_forgeConfig, { platform, outputPaths }) => {
+      if (platform !== 'darwin' || osxSignConfig) return;
+
+      for (const outputPath of outputPaths) {
+        const apps = fs.readdirSync(outputPath).filter((name) => name.endsWith('.app'));
+        for (const appName of apps) {
+          const appPath = path.join(outputPath, appName);
+
+          try {
+            execFileSync('codesign', ['--verify', '--deep', '--strict', appPath], { stdio: 'pipe' });
+            console.log(`Signature before ad-hoc signing: valid (${appName})`);
+          } catch (error) {
+            console.log(`Signature before ad-hoc signing: invalid (${appName}): ${String(error.stderr).trim()}`);
+          }
+
+          execFileSync('codesign', ['--force', '--deep', '--sign', '-', appPath], { stdio: 'inherit' });
+          // Fails the build if the new signature is not valid.
+          execFileSync('codesign', ['--verify', '--deep', '--strict', '--verbose=2', appPath], { stdio: 'inherit' });
+        }
+      }
+    },
+  },
   makers: [
       {
       name: "@electron-forge/maker-dmg",
