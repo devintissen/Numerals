@@ -4,6 +4,7 @@ A minimalist calculator inspired by the macOS Calculator, featuring a cleaner in
 
 ![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white)
 ![macOS](https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=macos&logoColor=F0F0F0)
+![Windows](https://img.shields.io/badge/Windows%2011-0078D6?style=for-the-badge&logo=windows11&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## Screenshots
@@ -60,7 +61,9 @@ Numerals is licensed under the [MIT License](LICENSE).
 
 ## Notes:
 
-Currently this application only runs on macOS, however a Windows and Linux version is currently in the works.
+Numerals runs on macOS and Windows 11. A Linux version is in the works.
+
+Only download Numerals from the [Releases page](https://github.com/devintissen/Numerals/releases) of this repository. Copies from anywhere else may have been changed. Each release lists a SHA-256 checksum for every file, so you can check your download is exactly the one published.
 
 ### macOS Security Notes
 
@@ -70,11 +73,9 @@ When opening the application for the first time, macOS may display a warning tha
 
 This does **not** indicate that the application is malicious. It simply means that Apple Developer code signing and notarization have not yet been completed.
 
-Only download Numerals from the [Releases page](https://github.com/devintissen/Numerals/releases) of this repository. Copies from anywhere else may have been changed.
+#### Check your download (macOS)
 
-### Check your download
-
-Each release lists a SHA-256 checksum for every file. After downloading, open **Terminal** and run:
+After downloading, open **Terminal** and run:
 
 ```bash
 shasum -a 256 ~/Downloads/<file you downloaded>
@@ -82,7 +83,7 @@ shasum -a 256 ~/Downloads/<file you downloaded>
 
 The long code it prints must match the one in the release notes exactly. If it doesn't, delete the file and don't open it.
 
-### Open the app
+#### Open the app (macOS)
 
 1. Move **Numerals.app** to your **Applications** folder.
 2. Open Numerals. macOS will warn that it can't verify the developer. Click **Done** (or **OK**).
@@ -91,3 +92,24 @@ The long code it prints must match the one in the release notes exactly. If it d
 
 This is Apple's supported way to open an app from an unidentified developer. Please don't remove the quarantine flag with `xattr` instead: that skips Gatekeeper's check and its warning entirely.
 
+### Windows Security Notes
+
+Current Windows releases of Numerals are **not yet code signed**, so Windows SmartScreen will warn you the first time you open the app and show the publisher as unknown.
+
+#### Check your download (Windows)
+
+After downloading, open **PowerShell** and run:
+
+```powershell
+Get-FileHash "$env:USERPROFILE\Downloads\<file you downloaded>" -Algorithm SHA256
+```
+
+The `Hash` it prints must match the one in the release notes (capital or lower-case letters don't matter). If it doesn't, delete the file and don't open it.
+
+#### Open the app (Windows)
+
+1. Right-click the downloaded `.zip` file and choose **Extract All…**. Don't run the app from inside the zip.
+2. Open the extracted folder and double-click **Numerals.exe**.
+3. If Windows shows **"Windows protected your PC"**, click **More info**, check that the app is `Numerals.exe`, then click **Run anyway**.
+
+After the first launch, Numerals opens normally.

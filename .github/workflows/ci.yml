@@ -31,7 +31,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Use Node.js
@@ -42,7 +42,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Packaging smoke test
-        run: |
-          npm run package
+        run: npm run make
         env:
           CI: true

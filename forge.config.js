@@ -33,7 +33,8 @@ module.exports = {
     {
       asar: true,
       ignore: [NOT_PACKAGED],
-      icon: 'assets/icon.icns',
+      // No extension: the packager picks icon.icns on macOS and icon.ico on Windows.
+      icon: 'assets/icon',
     },
     osxSignConfig ? { osxSign: osxSignConfig } : {},
     osxNotarizeConfig ? { osxNotarize: osxNotarizeConfig } : {}
@@ -77,7 +78,7 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      platforms: ['darwin', 'win32'],
     },
   ],
   plugins: [
