@@ -59,6 +59,7 @@ jobs:
           path: |
             out/make/**/*.zip
             out/make/**/*.dmg
+            out/make/**/*.exe
           if-no-files-found: error
 
   draft-release:
@@ -81,7 +82,7 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           mkdir release
-          find dist -type f \( -name '*.zip' -o -name '*.dmg' \) -exec cp {} release/ \;
+          find dist -type f \( -name '*.zip' -o -name '*.dmg' -o -name '*.exe' \) -exec cp {} release/ \;
           cd release
           sha256sum * > SHA256SUMS.txt
           {

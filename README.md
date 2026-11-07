@@ -94,7 +94,7 @@ This is Apple's supported way to open an app from an unidentified developer. Ple
 
 ### Windows Security Notes
 
-Current Windows releases of Numerals are **not yet code signed**, so Windows SmartScreen will warn you the first time you open the app and show the publisher as unknown.
+Current Windows releases of Numerals are **not yet code signed**, so Windows SmartScreen will warn you when you run the installer and show the publisher as unknown.
 
 #### Check your download (Windows)
 
@@ -106,10 +106,10 @@ Get-FileHash "$env:USERPROFILE\Downloads\<file you downloaded>" -Algorithm SHA25
 
 The `Hash` it prints must match the one in the release notes (capital or lower-case letters don't matter). If it doesn't, delete the file and don't open it.
 
-#### Open the app (Windows)
+#### Install the app (Windows)
 
-1. Right-click the downloaded `.zip` file and choose **Extract All…**. Don't run the app from inside the zip.
-2. Open the extracted folder and double-click **Numerals.exe**.
-3. If Windows shows **"Windows protected your PC"**, click **More info**, check that the app is `Numerals.exe`, then click **Run anyway**.
+1. Double-click the downloaded **Numerals-…-windows-x64-setup.exe**.
+2. If Windows shows **"Windows protected your PC"**, click **More info**, check that the app is the Numerals setup file you downloaded, then click **Run anyway**.
+3. Numerals installs for your user account (no admin password needed) and opens. It's added to the **Start menu** and your desktop.
 
-After the first launch, Numerals opens normally.
+To uninstall, open **Settings → Apps → Installed apps**, find **Numerals**, and click **Uninstall**.

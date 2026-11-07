@@ -3,6 +3,7 @@ const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
+const { version } = require('./package.json');
 
 // Construct optional macOS signing/notarization config only when the
 // required environment variables are provided. Avoid inserting explicit
@@ -78,7 +79,21 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin', 'win32'],
+      platforms: ['darwin'],
+    },
+    // Windows installer (Setup.exe). It installs Numerals for the current user
+    // without needing admin rights, adds it to the Start menu and desktop (via
+    // electron-squirrel-startup in main.js), and lists it in Settings > Apps so
+    // it can be uninstalled normally.
+    {
+      name: '@electron-forge/maker-squirrel',
+      config: {
+        setupExe: `Numerals-${version}-windows-x64-setup.exe`,
+        setupIcon: 'assets/icon.ico',
+        // Icon shown in Settings > Apps. Must be a public URL.
+        iconUrl: 'https://raw.githubusercontent.com/devintissen/Numerals/main/assets/icon.ico',
+        noMsi: true,
+      },
     },
   ],
   plugins: [
