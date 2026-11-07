@@ -63,7 +63,7 @@ Numerals is licensed under the [MIT License](LICENSE).
 
 Numerals runs on macOS and Windows 11. A Linux version is in the works.
 
-Only download Numerals from the [Releases page](https://github.com/devintissen/Numerals/releases) of this repository. Copies from anywhere else may have been changed. Each release lists a SHA-256 checksum for every file, so you can check your download is exactly the one published.
+Only download Numerals from the [Releases page](https://github.com/devintissen/Numerals/releases) of this repository. Copies from anywhere else may have been changed.
 
 ### macOS Security Notes
 
@@ -72,16 +72,6 @@ Current releases of Numerals are **not yet signed or notarized by Apple**.
 When opening the application for the first time, macOS may display a warning that the app cannot be verified because it is from an unidentified developer.
 
 This does **not** indicate that the application is malicious. It simply means that Apple Developer code signing and notarization have not yet been completed.
-
-#### Check your download (macOS)
-
-After downloading, open **Terminal** and run:
-
-```bash
-shasum -a 256 ~/Downloads/<file you downloaded>
-```
-
-The long code it prints must match the one in the release notes exactly. If it doesn't, delete the file and don't open it.
 
 #### Open the app (macOS)
 
@@ -95,16 +85,6 @@ This is Apple's supported way to open an app from an unidentified developer. Ple
 ### Windows Security Notes
 
 Current Windows releases of Numerals are **not yet code signed**, so Windows SmartScreen will warn you when you run the installer and show the publisher as unknown.
-
-#### Check your download (Windows)
-
-After downloading, open **PowerShell** and run:
-
-```powershell
-Get-FileHash "$env:USERPROFILE\Downloads\<file you downloaded>" -Algorithm SHA256
-```
-
-The `Hash` it prints must match the one in the release notes (capital or lower-case letters don't matter). If it doesn't, delete the file and don't open it.
 
 #### Install the app (Windows)
 
