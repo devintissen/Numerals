@@ -2,6 +2,9 @@ const display = typeof document !== 'undefined' ? document.getElementById('displ
 const history = typeof document !== 'undefined' ? document.getElementById('history') : null;
 const buttons = typeof document !== 'undefined' ? Array.from(document.querySelectorAll('button')) : [];
 
+// Long inputs make the number-matching regexes below very slow, so cap the length.
+const MAX_EXPRESSION_LENGTH = 256;
+
 let expression = '0';
 let justEvaluated = false;
 
@@ -34,6 +37,8 @@ function appendValue(value) {
     if (history) history.textContent = '';
     }
     justEvaluated = false;
+
+    if (expression.length >= MAX_EXPRESSION_LENGTH) return;
 
     // A number typed straight after a percent (e.g. "9%5") means multiply.
     if (expression.slice(-1) === '%' && (/^\d$/.test(value) || value === '.')) {
@@ -397,6 +402,7 @@ if (typeof module !== 'undefined' && module.exports) {
     toggleSign,
     evaluateExpression,
     getExpression: () => expression,
+    MAX_EXPRESSION_LENGTH,
     };
 }
 

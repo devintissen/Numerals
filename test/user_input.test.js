@@ -63,3 +63,15 @@ test('a number after a percent multiplies', () => {
   assert.equal(press(['9', '%', '5', '=']), '0.45');
   assert.equal(press(['5', '0', '%', '.', '5', '=']), '0.25');
 });
+
+const { MAX_EXPRESSION_LENGTH } = require('../user_input.js');
+
+test('stops accepting input at the maximum expression length', () => {
+  clearAll();
+  for (let i = 0; i < MAX_EXPRESSION_LENGTH + 50; i += 1) {
+    appendValue('1');
+  }
+  assert.equal(getExpression().length, MAX_EXPRESSION_LENGTH);
+  clearAll();
+  assert.equal(getExpression(), '0');
+});
