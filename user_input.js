@@ -5,6 +5,10 @@ const buttons = typeof document !== 'undefined' ? Array.from(document.querySelec
 // Long inputs make the number-matching regexes below very slow, so cap the length.
 const MAX_EXPRESSION_LENGTH = 256;
 
+// The only values a button or key can add. Anything else is ignored, so the
+// expression can never hold text the evaluator wasn't built for.
+const ALLOWED_VALUES = new Set(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '+', '-', '*', '/', '%']);
+
 let expression = '0';
 let justEvaluated = false;
 
@@ -32,6 +36,8 @@ function isOperator(char) {
 }
 
 function appendValue(value) {
+    if (!ALLOWED_VALUES.has(value)) return;
+
     if (justEvaluated && !isOperator(value)) {
     expression = '0';
     if (history) history.textContent = '';
