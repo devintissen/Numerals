@@ -33,26 +33,81 @@ html, body {
 
 .side-menu {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 280px;
-    max-width: 80%;
-    height: calc(100% - 20px);
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    height: 80%;
+    overflow: hidden;
     background: rgb(224, 229, 236);
-    transform: translateX(calc(-100% - 10px));
-    transition: transform 0.2s ease;
-    padding-top:  40px;
+    transform: translateY(calc(100% + 10px));
+    transition: transform 0.25s ease;
     border-radius: 10px;
-
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
 
     z-index: 1000;
     box-sizing: border-box;
 }
 
 .side-menu.open {
+    transform: translateY(0);
+}
+
+/* The sheet holds two pages side by side: the menu, and the full history
+   page that slides in from the right over it. */
+.Sheet_Page {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+
+    padding-top: 15px;
+    padding-bottom: 20px;
+    box-sizing: border-box;
+
+    background: inherit;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.Sheet_Page_History {
+    transform: translateX(100%);
+}
+
+/* Thin, subtle scrollbar for the sheet pages. Uses the ::-webkit-scrollbar
+   rules on purpose: setting the standard scrollbar-width/scrollbar-color
+   would make Chromium ignore these and fall back to a plainer bar. */
+.Sheet_Page::-webkit-scrollbar {
+    width: 4px;
+}
+
+.Sheet_Page::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 12px 0;
+}
+
+.Sheet_Page::-webkit-scrollbar-thumb {
+    background: rgba(110, 120, 135, 0.25);
+    border-radius: 4px;
+}
+
+.Sheet_Page::-webkit-scrollbar-thumb:hover {
+    background: rgba(110, 120, 135, 0.45);
+}
+
+.Sheet_Page::-webkit-scrollbar-button {
+    display: none;
+}
+
+body[data-theme="dark"] .Sheet_Page::-webkit-scrollbar-thumb {
+    background: rgba(230, 235, 240, 0.18);
+}
+
+body[data-theme="dark"] .Sheet_Page::-webkit-scrollbar-thumb:hover {
+    background: rgba(230, 235, 240, 0.35);
+}
+
+.side-menu.show-history .Sheet_Page_Main {
+    transform: translateX(-30%);
+}
+
+.side-menu.show-history .Sheet_Page_History {
     transform: translateX(0);
 }
 
@@ -347,15 +402,236 @@ body[data-theme="dark"] [data-pressable].pressed {
 
 .Themes_Section {
     width: calc(100% - 20px);
-    height: 100px;
+    height: auto;
 
     padding: 0px;
     margin: 0px;
-    margin-top: 20px;
+    margin-top: 10px;
     margin-left: 10px;
     margin-right: 10px;
 
     background-color: transparent;
+}
+
+.History_Section {
+    width: calc(100% - 20px);
+
+    padding: 0px;
+    margin: 0px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.History_List {
+    list-style: none;
+
+    margin: 0px;
+    margin-top: 10px;
+    padding: 0px;
+}
+
+.History_Item {
+    margin: 0px;
+    padding: 0px;
+}
+
+/* The whole calculation row is the copy button. */
+.History_Copy {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0px;
+    padding: 6px 10px;
+    border: 0;
+    outline: none;
+    border-radius: 10px;
+    background-color: transparent;
+
+    color: inherit;
+    font-family: sans-serif;
+    text-align: left;
+    cursor: pointer;
+
+    transition: background-color 0.15s ease;
+}
+
+.History_Copy:hover,
+.History_Copy:focus-visible {
+    background-color: rgba(110, 120, 135, 0.12);
+}
+
+.History_Copy:active {
+    background-color: rgba(110, 120, 135, 0.2);
+    transition: background-color 0s;
+}
+
+.History_Text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.History_Copy_Indicator {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: rgb(110, 120, 135);
+    transition: color 0.2s ease;
+}
+
+.History_Copy:hover .History_Copy_Indicator {
+    color: black;
+}
+
+.History_Copy.copied .History_Copy_Indicator {
+    color: rgb(40, 150, 90);
+}
+
+.History_Copy_Icon {
+    width: 18px;
+    height: 18px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.History_Expression {
+    font-size: 13px;
+    color: rgb(110, 120, 135);
+}
+
+.History_Result {
+    font-size: 18px;
+    font-weight: 600;
+    color: black;
+}
+
+.History_Empty {
+    margin: 0px;
+    margin-top: 10px;
+    padding: 0px 10px;
+
+    font-family: sans-serif;
+    font-size: 13px;
+    color: rgb(110, 120, 135);
+}
+
+.History_Empty[hidden] {
+    display: none;
+}
+
+.History_Header {
+    width: 100%;
+
+    margin: 0px;
+    padding: 0px;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    color: inherit;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Placeholder arrows (text glyphs) until real icons are designed. */
+.History_Arrow {
+    margin-right: 10px;
+
+    font-family: sans-serif;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.History_Page_Header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+
+    margin: 0px;
+    margin-left: 10px;
+    padding: 0px;
+}
+
+.History_Back {
+    width: 30px;
+    height: 30px;
+
+    margin: 0px;
+    padding: 0px;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    font-family: sans-serif;
+    font-size: 34px;
+    line-height: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.History_Page_Title {
+    margin-left: 0px;
+}
+
+.History_Clear {
+    margin: 0px;
+    margin-left: auto;
+    margin-right: 10px;
+    padding: 4px 8px;
+    border: 0;
+    outline: none;
+    border-radius: 8px;
+    background-color: transparent;
+
+    color: rgb(110, 120, 135);
+    font-family: sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.History_Clear[hidden] {
+    display: none;
+}
+
+.History_Clear:hover,
+.History_Clear:focus-visible {
+    background-color: rgba(110, 120, 135, 0.12);
+}
+
+.History_Clear.armed {
+    color: rgb(190, 45, 45);
+}
+
+.History_List_Full {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .Themes_Selector_Button {
@@ -472,6 +748,57 @@ body[data-theme="dark"] .Menu_Close {
 }
 
 body[data-theme="dark"] .Menu_Subtitle {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .History_Expression,
+body[data-theme="dark"] .History_Empty {
+    color: rgb(150, 160, 175);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .History_Arrow,
+body[data-theme="dark"] .History_Back {
+    color: rgb(230, 235, 240);
+    transition: 0.2s;
+}
+
+body[data-theme="dark"] .History_Clear {
+    color: rgb(150, 160, 175);
+}
+
+body[data-theme="dark"] .History_Clear:hover,
+body[data-theme="dark"] .History_Clear:focus-visible {
+    background-color: rgba(230, 235, 240, 0.08);
+}
+
+body[data-theme="dark"] .History_Clear.armed {
+    color: rgb(240, 120, 120);
+}
+
+body[data-theme="dark"] .History_Copy:hover,
+body[data-theme="dark"] .History_Copy:focus-visible {
+    background-color: rgba(230, 235, 240, 0.08);
+}
+
+body[data-theme="dark"] .History_Copy:active {
+    background-color: rgba(230, 235, 240, 0.14);
+}
+
+body[data-theme="dark"] .History_Copy_Indicator {
+    color: rgb(150, 160, 175);
+}
+
+body[data-theme="dark"] .History_Copy:hover .History_Copy_Indicator {
+    color: rgb(230, 235, 240);
+}
+
+body[data-theme="dark"] .History_Copy.copied .History_Copy_Indicator {
+    color: rgb(90, 200, 130);
+}
+
+body[data-theme="dark"] .History_Result {
     color: rgb(230, 235, 240);
     transition: 0.2s;
 }

@@ -309,6 +309,12 @@ function evaluateExpression() {
 
     const cleaned = Number(result.toFixed(10)).toString();
     if (history) history.textContent = `${formatForDisplay(expression)} =`;
+    // A lone number (such as pressing "=" again on a result) isn't a calculation.
+    // Skip the first character so a leading "-" doesn't count as an operator.
+    const isCalculation = /[+\-*/]/.test(raw.slice(1));
+    if (isCalculation && typeof window !== 'undefined' && window.NumeralsHistory) {
+        window.NumeralsHistory.add(formatForDisplay(expression), formatForDisplay(cleaned));
+    }
     expression = cleaned;
     justEvaluated = true;
     updateDisplay();
@@ -362,6 +368,9 @@ if (typeof document !== 'undefined' && document.body) {
     });
 
     document.addEventListener('keydown', (event) => {
+    // While the menu sheet is open, keys belong to the sheet's own buttons.
+    if (document.getElementById('sideMenu')?.classList.contains('open')) return;
+
     const key = event.key;
     const visualButton = findButtonByKey(key);
     if (visualButton) pressVisual(visualButton);
