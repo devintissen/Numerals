@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         run: npm run test
       - name: Production audit
-        run: npm run audit:prod -- --audit-level=critical
+        run: npm run audit:prod -- --audit-level=high
 
   package-smoke:
     needs: test-and-audit
