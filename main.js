@@ -12,6 +12,24 @@ protocol.registerSchemesAsPrivileged([
   { scheme: APP_SCHEME, privileges: { standard: true, secure: true } },
 ])
 
+// The page only ever loads these files, so app:// serves nothing else. This
+// keeps main.js, preload.js, package.json, node_modules (and, during
+// `npm start`, the .git folder or a local .env) out of the page's reach.
+const RENDERER_FILES = new Set([
+  'index.html',
+  'styles.css',
+  'button_animation.js',
+  'button_animation_opacity.js',
+  'user_input.js',
+  'menu.js',
+  'theme_selector.js',
+])
+
+function isRendererFile(relativePath) {
+  const name = relativePath.replace(/^\/+/, '')
+  return RENDERER_FILES.has(name) || /^Images\/[^/\\]+\.png$/.test(name)
+}
+
 function registerAppProtocol() {
   const appRoot = app.getAppPath()
 
@@ -26,6 +44,10 @@ function registerAppProtocol() {
       relativePath = decodeURIComponent(pathname)
     } catch {
       return new Response('Bad request', { status: 400 })
+    }
+
+    if (!isRendererFile(relativePath)) {
+      return new Response('Not found', { status: 404 })
     }
 
     const filePath = path.join(appRoot, relativePath)
