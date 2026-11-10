@@ -4,7 +4,14 @@ updates:
     directory: "/"           # Looks in your main folder for package.json
     schedule:
       interval: "weekly"     # Checks for updates once a week (prevents spam)
+    # Wait a week before suggesting a brand-new release. Hijacked package
+    # versions are usually caught and pulled within days, so this keeps them
+    # out of our PRs. Security updates are not delayed by this setting.
+    cooldown:
+      default-days: 7
   - package-ecosystem: "github-actions" # Keeps the pinned workflow actions up to date
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
