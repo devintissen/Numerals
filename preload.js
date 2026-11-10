@@ -9,3 +9,13 @@ contextBridge.exposeInMainWorld('windowControls', {
     }
   },
 })
+
+// Lets the page copy a calculation result. The main process checks that the
+// text is a plain number before writing it to the clipboard.
+contextBridge.exposeInMainWorld('numeralsClipboard', {
+  copyResult: (text) => {
+    if (typeof text === 'string') {
+      ipcRenderer.send('clipboard:copy-result', text)
+    }
+  },
+})

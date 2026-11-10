@@ -309,6 +309,9 @@ function evaluateExpression() {
 
     const cleaned = Number(result.toFixed(10)).toString();
     if (history) history.textContent = `${formatForDisplay(expression)} =`;
+    if (typeof window !== 'undefined' && window.NumeralsHistory) {
+        window.NumeralsHistory.add(formatForDisplay(expression), formatForDisplay(cleaned));
+    }
     expression = cleaned;
     justEvaluated = true;
     updateDisplay();

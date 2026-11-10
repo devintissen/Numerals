@@ -1,6 +1,6 @@
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
-const { app, BrowserWindow, session, ipcMain, protocol, net } = require('electron')
+const { app, BrowserWindow, session, ipcMain, protocol, net, clipboard } = require('electron')
 
 // Serve the app from app://numerals/ instead of file://. A file:// page can
 // reach other files on disk, while this handler only ever returns files from
@@ -23,6 +23,7 @@ const RENDERER_FILES = new Set([
   'user_input.js',
   'menu.js',
   'theme_selector.js',
+  'history.js',
 ])
 
 function isRendererFile(relativePath) {
@@ -185,6 +186,21 @@ const createWindow = () => {
       ipcMain.removeListener('window-controls:theme', onThemeChanged)
     })
   }
+
+  // Copy a calculation result to the clipboard. The page can't use the web
+  // clipboard API because all permissions are denied above, so it asks here.
+  // Only plain numbers are accepted, so the page can't place arbitrary text.
+  const onCopyResult = (event, text) => {
+    if (event.sender !== win.webContents) return
+    if (typeof text !== 'string' || text.length > 64) return
+    if (!/^-?\d+(\.\d+)?(e[+-]\d+)?$/.test(text)) return
+    clipboard.writeText(text)
+  }
+
+  ipcMain.on('clipboard:copy-result', onCopyResult)
+  win.on('closed', () => {
+    ipcMain.removeListener('clipboard:copy-result', onCopyResult)
+  })
 
   win.loadURL(`${APP_SCHEME}://${APP_HOST}/index.html`)
 }

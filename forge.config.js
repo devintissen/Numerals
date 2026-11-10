@@ -27,7 +27,7 @@ const osxNotarizeConfig =
 // Anything not named here stays out of the packaged app. This allowlist means
 // local files such as .env or signing keys can never be shipped by accident,
 // even though .gitignore keeps them out of Git. Add new runtime files here.
-const NOT_PACKAGED = /^\/(?!(?:package\.json|LICENSE|index\.html|styles\.css|(?:main|preload|menu|user_input|theme_selector|button_animation|button_animation_opacity)\.js|Images|node_modules)(?:\/|$))/;
+const NOT_PACKAGED = /^\/(?!(?:package\.json|LICENSE|index\.html|styles\.css|(?:main|preload|menu|user_input|theme_selector|history|button_animation|button_animation_opacity)\.js|Images|node_modules)(?:\/|$))/;
 
 module.exports = {
   packagerConfig: Object.assign(

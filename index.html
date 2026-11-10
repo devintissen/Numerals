@@ -9,25 +9,49 @@
 </head>
 <body>
     <nav class="side-menu" id="sideMenu">
-        <div class="Top_Row">
-            <h2 class="Menu_Title">Menu</h2>
-            <button class="Menu_Close" id="closeMenu" data-pressable_opacity>&times;</button>
+        <div class="Sheet_Page Sheet_Page_Main" id="menuPage">
+            <div class="Top_Row">
+                <h2 class="Menu_Title">Menu</h2>
+                <button class="Menu_Close" id="closeMenu" data-pressable_opacity>&times;</button>
+            </div>
+
+            <div class="History_Section">
+                <button class="History_Header" id="openHistory" data-pressable_opacity aria-label="Show all history">
+                    <h1 class="Menu_Subtitle">History</h1>
+                    <!-- Placeholder arrow; swap for an image later -->
+                    <span class="History_Arrow" aria-hidden="true">&#8250;</span>
+                </button>
+
+                <ul class="History_List" id="historyPreview"></ul>
+                <p class="History_Empty" id="historyPreviewEmpty">No calculations yet</p>
+            </div>
+
+            <div class="Themes_Section">
+                <h1 class="Menu_Subtitle">Themes</h1>
+
+                <button class="Themes_Selector_Button" data-pressable_opacity data-theme="light">
+                    <h1 class="Themes_Selector_Title">Light Mode</h1>
+
+                    <img src="Images/Checkmark.png" alt="Checkmark" class="Checkmark_Image">
+                </button>
+
+                <button class="Themes_Selector_Button" data-pressable_opacity data-theme="dark">
+                    <h1 class="Themes_Selector_Title">Dark Mode</h1>
+
+                    <img src="Images/Checkmark.png" alt="Checkmark" class="Checkmark_Image">
+                </button>
+            </div>
         </div>
 
-        <div class="Themes_Section">
-            <h1 class="Menu_Subtitle">Themes</h1>
+        <div class="Sheet_Page Sheet_Page_History" id="historyPage" aria-hidden="true" inert>
+            <div class="History_Page_Header">
+                <!-- Placeholder arrow; swap for an image later -->
+                <button class="History_Back" id="closeHistory" data-pressable_opacity aria-label="Back to menu">&#8249;</button>
+                <h2 class="Menu_Title History_Page_Title">History</h2>
+            </div>
 
-            <button class="Themes_Selector_Button" data-pressable_opacity data-theme="light">
-                <h1 class="Themes_Selector_Title">Light Mode</h1>
-
-                <img src="Images/Checkmark.png" alt="Checkmark" class="Checkmark_Image">
-            </button>
-
-            <button class="Themes_Selector_Button" data-pressable_opacity data-theme="dark">
-                <h1 class="Themes_Selector_Title">Dark Mode</h1>
-
-                <img src="Images/Checkmark.png" alt="Checkmark" class="Checkmark_Image">
-            </button>
+            <ul class="History_List History_List_Full" id="historyFull"></ul>
+            <p class="History_Empty History_List_Full" id="historyFullEmpty">No calculations yet</p>
         </div>
     </nav>
 
@@ -148,6 +172,7 @@
 
     <script src="button_animation.js"></script>
     <script src="button_animation_opacity.js"></script>
+    <script src="history.js"></script>
     <script src="user_input.js"></script>
     <script src="menu.js"></script>
     <script src="theme_selector.js"></script>
