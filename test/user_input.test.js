@@ -75,3 +75,8 @@ test('stops accepting input at the maximum expression length', () => {
   clearAll();
   assert.equal(getExpression(), '0');
 });
+
+test('ignores values that are not calculator keys', () => {
+  press(['1', '<img src=x>', '+', 'constructor', '2', '', '99']);
+  assert.equal(getExpression(), '1+2');
+});
