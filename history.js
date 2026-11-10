@@ -4,6 +4,7 @@
 const HISTORY_STORAGE_KEY = 'calculationHistory';
 const HISTORY_PREVIEW_COUNT = 3;
 const HISTORY_MAX_ENTRIES = 100;
+const CLEAR_CONFIRM_MS = 3000;
 
 const historySheet = document.getElementById('sideMenu');
 const historyPage = document.getElementById('historyPage');
@@ -14,8 +15,11 @@ const historyFull = document.getElementById('historyFull');
 const historyFullEmpty = document.getElementById('historyFullEmpty');
 const openHistoryButton = document.getElementById('openHistory');
 const closeHistoryButton = document.getElementById('closeHistory');
+const clearHistoryButton = document.getElementById('clearHistory');
 
 let calculationHistory = loadHistory();
+let clearArmed = false;
+let clearDisarmTimer = null;
 
 function loadHistory() {
     try {
@@ -128,6 +132,7 @@ function fillList(list, emptyMessage, entries) {
 function renderHistory() {
     fillList(historyPreview, historyPreviewEmpty, calculationHistory.slice(0, HISTORY_PREVIEW_COUNT));
     fillList(historyFull, historyFullEmpty, calculationHistory);
+    clearHistoryButton.hidden = calculationHistory.length === 0;
 }
 
 function addHistoryEntry(expression, result) {
@@ -139,7 +144,37 @@ function addHistoryEntry(expression, result) {
     renderHistory();
 }
 
+function clearHistory() {
+    calculationHistory = [];
+    saveHistory();
+    renderHistory();
+}
+
+function disarmClear() {
+    clearArmed = false;
+    clearTimeout(clearDisarmTimer);
+    clearHistoryButton.textContent = 'Clear';
+    clearHistoryButton.classList.remove('armed');
+}
+
+// Clearing can't be undone, so the first click only asks for confirmation.
+function onClearClick() {
+    if (!clearArmed) {
+        clearArmed = true;
+        clearHistoryButton.textContent = 'Clear all?';
+        clearHistoryButton.classList.add('armed');
+        clearDisarmTimer = setTimeout(disarmClear, CLEAR_CONFIRM_MS);
+        return;
+    }
+
+    disarmClear();
+    clearHistory();
+    // The Clear button is now hidden, so give keyboard focus somewhere to go.
+    closeHistoryButton.focus();
+}
+
 function setHistoryPageOpen(open) {
+    if (!open) disarmClear();
     historySheet.classList.toggle('show-history', open);
     // Keep the hidden page out of tab order and screen readers.
     historyPage.inert = !open;
@@ -151,6 +186,7 @@ function setHistoryPageOpen(open) {
 
 openHistoryButton.addEventListener('click', () => setHistoryPageOpen(true));
 closeHistoryButton.addEventListener('click', () => setHistoryPageOpen(false));
+clearHistoryButton.addEventListener('click', onClearClick);
 
 // Return to the menu page once the sheet has finished closing, so it opens
 // on the menu next time without the switch being visible.

@@ -598,6 +598,37 @@ body[data-theme="dark"] [data-pressable].pressed {
     margin-left: 0px;
 }
 
+.History_Clear {
+    margin: 0px;
+    margin-left: auto;
+    margin-right: 10px;
+    padding: 4px 8px;
+    border: 0;
+    outline: none;
+    border-radius: 8px;
+    background-color: transparent;
+
+    color: rgb(110, 120, 135);
+    font-family: sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.History_Clear[hidden] {
+    display: none;
+}
+
+.History_Clear:hover,
+.History_Clear:focus-visible {
+    background-color: rgba(110, 120, 135, 0.12);
+}
+
+.History_Clear.armed {
+    color: rgb(190, 45, 45);
+}
+
 .History_List_Full {
     margin-left: 10px;
     margin-right: 10px;
@@ -731,6 +762,19 @@ body[data-theme="dark"] .History_Arrow,
 body[data-theme="dark"] .History_Back {
     color: rgb(230, 235, 240);
     transition: 0.2s;
+}
+
+body[data-theme="dark"] .History_Clear {
+    color: rgb(150, 160, 175);
+}
+
+body[data-theme="dark"] .History_Clear:hover,
+body[data-theme="dark"] .History_Clear:focus-visible {
+    background-color: rgba(230, 235, 240, 0.08);
+}
+
+body[data-theme="dark"] .History_Clear.armed {
+    color: rgb(240, 120, 120);
 }
 
 body[data-theme="dark"] .History_Copy:hover,
