@@ -1,5 +1,9 @@
 const themeOptions = document.querySelectorAll('.Themes_Selector_Button:not([disabled])');
 
+// Follows the OS light/dark setting (Windows: Settings > Personalization >
+// Colors > "Choose your app mode"; macOS: Appearance).
+const systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
 // Mapping for image sources based on theme
 const imageMappings = {
     'Menu.png': { light: 'Images/Menu.png', dark: 'Images/Menu White.png' },
@@ -8,6 +12,9 @@ const imageMappings = {
     'Divide.png': { light: 'Images/Divide.png', dark: 'Images/Divide White.png' },
     'Multiplication.png': { light: 'Images/Multiplication.png', dark: 'Images/Multiplication White.png' }
 };
+
+// The option the user picked: 'light', 'dark' or 'system'.
+let selectedThemeChoice = 'system';
 
 function initializeImageData() {
     const images = document.querySelectorAll('img');
@@ -21,7 +28,7 @@ function initializeImageData() {
 function updateImagesForTheme(theme) {
     // Get all img elements
     const images = document.querySelectorAll('img');
-    
+
     images.forEach(img => {
         const originalSrc = img.dataset.originalSrc;
         const filename = originalSrc.split('/').pop();
@@ -29,6 +36,24 @@ function updateImagesForTheme(theme) {
             img.src = imageMappings[filename][theme];
         }
     });
+}
+
+// Turns the user's choice into the theme actually drawn ('light' or 'dark').
+function resolveTheme(choice) {
+    if (choice === 'system') return systemDarkQuery.matches ? 'dark' : 'light';
+    return choice;
+}
+
+function applyTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+
+    // Update images based on the applied theme
+    updateImagesForTheme(theme);
+
+    // Match the native Windows minimize/close button colors to the theme
+    if (window.windowControls) {
+        window.windowControls.setTheme(theme);
+    }
 }
 
 function selectThemeButton(button) {
@@ -42,19 +67,11 @@ function selectThemeButton(button) {
     button.classList.add('selected');
     button.setAttribute('aria-pressed', 'true');
 
-    const selectedTheme = button.dataset.theme;
-    document.body.setAttribute('data-theme', selectedTheme);
+    selectedThemeChoice = button.dataset.theme;
+    applyTheme(resolveTheme(selectedThemeChoice));
 
-    // Update images based on the selected theme
-    updateImagesForTheme(selectedTheme);
-
-    // Match the native Windows minimize/close button colors to the theme
-    if (window.windowControls) {
-        window.windowControls.setTheme(selectedTheme);
-    }
-
-    // Save the selected theme to localStorage
-    localStorage.setItem('selectedTheme', selectedTheme);
+    // Save the selected option (including 'system') to localStorage
+    localStorage.setItem('selectedTheme', selectedThemeChoice);
 }
 
 themeOptions.forEach(option => {
@@ -62,20 +79,29 @@ themeOptions.forEach(option => {
     option.addEventListener('click', () => selectThemeButton(option));
 });
 
+// When following the system, switch live as soon as the OS setting changes.
+systemDarkQuery.addEventListener('change', () => {
+    if (selectedThemeChoice === 'system') {
+        applyTheme(resolveTheme('system'));
+    }
+});
+
 // Initialize image data on load
 initializeImageData();
 
-// Load saved theme or default to first option
-const savedTheme = localStorage.getItem('selectedTheme');
-let initialButton = themeOptions[0]; // default
+// Load the saved option; new installs follow the system by default.
+const savedTheme = localStorage.getItem('selectedTheme') || 'system';
+const initialButton =
+    Array.from(themeOptions).find(button => button.dataset.theme === savedTheme)
+    || Array.from(themeOptions).find(button => button.dataset.theme === 'system')
+    || themeOptions[0];
 
-if (savedTheme) {
-    const savedButton = Array.from(themeOptions).find(button => button.dataset.theme === savedTheme);
-    if (savedButton) {
-        initialButton = savedButton;
-    }
-}
-
-if (themeOptions.length > 0) {
+if (initialButton) {
     selectThemeButton(initialButton);
 }
+
+// theme_boot.js turned transitions off so the first frame appears in the right
+// theme without fading. Turn them back on once that frame has been drawn.
+requestAnimationFrame(() => {
+    requestAnimationFrame(() => document.body.classList.remove('Theme_Loading'));
+});

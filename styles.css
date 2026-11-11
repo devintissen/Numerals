@@ -1,3 +1,12 @@
+/* Set by theme_boot.js while the page loads, so the saved theme appears
+   immediately instead of fading in from the light theme. */
+body.Theme_Loading,
+body.Theme_Loading *,
+body.Theme_Loading *::before,
+body.Theme_Loading *::after {
+    transition: none !important;
+}
+
 html, body {
     width: 100%;
     height: 100%;
@@ -12,6 +21,15 @@ html, body {
     justify-content: end;
     align-items: end;
     transition: 0.2s;
+
+    /* Stop double-clicks and small drags on buttons from selecting their
+       text/icons (the blue highlight). */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+img {
+    -webkit-user-drag: none;
 }
 
 .overlay {
@@ -33,15 +51,17 @@ html, body {
 
 .side-menu {
     position: fixed;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     height: 80%;
     overflow: hidden;
     background: rgb(224, 229, 236);
-    transform: translateY(calc(100% + 10px));
+    transform: translateY(100%);
     transition: transform 0.25s ease;
-    border-radius: 10px;
+    /* Bottom corners stay square: the OS clips them to the window's own
+       corner radius, so they always match (including snapped/maximized). */
+    border-radius: 16px 16px 0 0;
 
     z-index: 1000;
     box-sizing: border-box;
@@ -514,7 +534,8 @@ body[data-theme="dark"] [data-pressable].pressed {
 
 .History_Expression {
     font-size: 13px;
-    color: rgb(110, 120, 135);
+    /* Darker than the old rgb(110,120,135) so 13px text passes 4.5:1. */
+    color: rgb(85, 94, 108);
 }
 
 .History_Result {
@@ -530,7 +551,7 @@ body[data-theme="dark"] [data-pressable].pressed {
 
     font-family: sans-serif;
     font-size: 13px;
-    color: rgb(110, 120, 135);
+    color: rgb(85, 94, 108);
 }
 
 .History_Empty[hidden] {
@@ -632,6 +653,41 @@ body[data-theme="dark"] [data-pressable].pressed {
 .History_List_Full {
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.History_Day + .History_Day {
+    margin-top: 14px;
+}
+
+/* Day headings stay pinned while scrolling through that day. The solid
+   background hides the rows sliding underneath. */
+.History_Day_Heading {
+    position: sticky;
+    /* Sticky stops at the page's 15px padding-top; -15px pins it flush to
+       the sheet's top edge instead of leaving a gap above it. */
+    top: -15px;
+    z-index: 1;
+
+    /* Bleed past .History_List_Full's 10px side margins so rows can't peek
+       out at the sides while pinned. */
+    margin: 0px -10px;
+    margin-top: 10px;
+    padding: 8px 20px 4px;
+
+    background: rgb(224, 229, 236);
+    font-family: sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgb(85, 94, 108);
+}
+
+.History_Day .History_List {
+    margin-top: 2px;
+}
+
+body[data-theme="dark"] .History_Day_Heading {
+    background: rgb(45, 52, 62);
+    color: rgb(150, 160, 175);
 }
 
 .Themes_Selector_Button {
