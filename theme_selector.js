@@ -99,3 +99,9 @@ const initialButton =
 if (initialButton) {
     selectThemeButton(initialButton);
 }
+
+// theme_boot.js turned transitions off so the first frame appears in the right
+// theme without fading. Turn them back on once that frame has been drawn.
+requestAnimationFrame(() => {
+    requestAnimationFrame(() => document.body.classList.remove('Theme_Loading'));
+});

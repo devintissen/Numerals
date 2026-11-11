@@ -1,6 +1,7 @@
+const fs = require('node:fs')
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
-const { app, BrowserWindow, session, ipcMain, protocol, net, clipboard } = require('electron')
+const { app, BrowserWindow, session, ipcMain, protocol, net, clipboard, nativeTheme } = require('electron')
 
 // Serve the app from app://numerals/ instead of file://. A file:// page can
 // reach other files on disk, while this handler only ever returns files from
@@ -22,6 +23,7 @@ const RENDERER_FILES = new Set([
   'button_animation_opacity.js',
   'user_input.js',
   'menu.js',
+  'theme_boot.js',
   'theme_selector.js',
   'history.js',
 ])
@@ -64,15 +66,18 @@ function registerAppProtocol() {
 // Handle Windows Squirrel install/uninstall events gracefully, if the
 // optional `electron-squirrel-startup` package is present. This prevents
 // the app from continuing to launch during install/update events.
-try {
-  // Require is wrapped in try/catch so absence of the package won't break
-  // development or other packaging flows.
-  const squirrelStartup = require('electron-squirrel-startup');
-  if (squirrelStartup) {
-    app.quit();
+// Squirrel is the Windows installer, so skip loading this on other platforms.
+if (process.platform === 'win32') {
+  try {
+    // Require is wrapped in try/catch so absence of the package won't break
+    // development or other packaging flows.
+    const squirrelStartup = require('electron-squirrel-startup');
+    if (squirrelStartup) {
+      app.quit();
+    }
+  } catch (e) {
+    // Optional dependency not installed — ignore.
   }
-} catch (e) {
-  // Optional dependency not installed — ignore.
 }
 
 const isDev = !app.isPackaged
@@ -91,29 +96,75 @@ const TITLE_BAR_OVERLAY_THEMES = {
   dark: { color: '#00000000', symbolColor: '#E6EBF0' },
 }
 
+// Window background for each theme. These match the body background colors
+// in styles.css, so the window is never a different color from the page.
+const WINDOW_BACKGROUNDS = {
+  light: '#E0E5EC',
+  dark: '#2D343E',
+}
+
+// The page keeps the user's theme choice in localStorage, which the main
+// process can't read before the window exists. The page tells us the theme it
+// drew (see 'window-controls:theme' below), and we keep a copy here so the
+// next launch starts with the right window and caption-button colors.
+const THEME_FILE = path.join(app.getPath('userData'), 'theme.json')
+
+function isThemeName(theme) {
+  return typeof theme === 'string' && Object.hasOwn(TITLE_BAR_OVERLAY_THEMES, theme)
+}
+
+function loadLastTheme() {
+  try {
+    const { theme } = JSON.parse(fs.readFileSync(THEME_FILE, 'utf8'))
+    if (isThemeName(theme)) return theme
+  } catch {
+    // First launch or unreadable file: fall through to the OS setting.
+  }
+  return nativeTheme.shouldUseDarkColors ? 'dark' : 'light'
+}
+
+let lastTheme = null
+
+function saveLastTheme(theme) {
+  if (theme === lastTheme) return
+  lastTheme = theme
+  fs.writeFile(THEME_FILE, JSON.stringify({ theme }), () => {
+    // Best effort: a failed write only means the next launch guesses the theme.
+  })
+}
+
 // Platform-specific frame options:
 // - macOS: hidden title bar with inset traffic lights.
 // - Windows/Linux: hidden title bar (no default Windows 11 frame/caption)
 //   with Window Controls Overlay, which draws the native minimize/close
 //   buttons on top of the web content in the top-right corner.
-const frameOptions = isMac
-  ? {
-      titleBarStyle: 'hidden',
-      trafficLightPosition: { x: 15, y: 15 },
-    }
-  : {
-      titleBarStyle: 'hidden',
-      titleBarOverlay: {
-        ...TITLE_BAR_OVERLAY_THEMES.light,
-        height: TITLE_BAR_OVERLAY_HEIGHT,
-      },
-    }
+function frameOptionsFor(theme) {
+  return isMac
+    ? {
+        titleBarStyle: 'hidden',
+        trafficLightPosition: { x: 15, y: 15 },
+      }
+    : {
+        titleBarStyle: 'hidden',
+        titleBarOverlay: {
+          ...TITLE_BAR_OVERLAY_THEMES[theme],
+          height: TITLE_BAR_OVERLAY_HEIGHT,
+        },
+      }
+}
 
 const createWindow = () => {
+  const initialTheme = loadLastTheme()
+  lastTheme = initialTheme
+
   const win = new BrowserWindow({
     width: 290,
     height: 500,
-    ...frameOptions,
+    ...frameOptionsFor(initialTheme),
+    backgroundColor: WINDOW_BACKGROUNDS[initialTheme],
+    // Stay hidden until the page has drawn its first frame (see
+    // 'ready-to-show' below), so the user never sees a blank or wrong-theme window.
+    show: false,
     resizable: false,
     // Fixed-size calculator: no maximize button on Windows either.
     maximizable: false,
@@ -126,8 +177,19 @@ const createWindow = () => {
       sandbox: true,
       webSecurity: true,
       allowRunningInsecureContent: false,
+      // Nothing in a calculator needs spellchecking, so don't load it.
+      spellcheck: false,
     },
   })
+
+  // Show the window once the page has drawn its first frame. The timer is a
+  // fallback so the window still appears if that event never fires.
+  const showWindow = () => {
+    clearTimeout(showFallback)
+    if (!win.isDestroyed() && !win.isVisible()) win.show()
+  }
+  const showFallback = setTimeout(showWindow, 3000)
+  win.once('ready-to-show', showWindow)
 
   // Prevent opening new windows
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
@@ -168,24 +230,26 @@ const createWindow = () => {
     })
   }
 
-  // Keep the native Windows caption-button symbols in sync with the app theme.
-  if (!isMac) {
-    const onThemeChanged = (event, theme) => {
-      if (event.sender !== win.webContents) return
-      // Only accept the theme names defined above, never inherited object keys.
-      if (typeof theme !== 'string' || !Object.hasOwn(TITLE_BAR_OVERLAY_THEMES, theme)) return
-      if (win.isDestroyed()) return
+  // Keep the window background and the native Windows caption-button symbols
+  // in sync with the app theme, and remember it for the next launch.
+  const onThemeChanged = (event, theme) => {
+    if (event.sender !== win.webContents) return
+    // Only accept the theme names defined above, never inherited object keys.
+    if (!isThemeName(theme)) return
+    if (win.isDestroyed()) return
 
+    win.setBackgroundColor(WINDOW_BACKGROUNDS[theme])
+    if (!isMac) {
       const overlay = TITLE_BAR_OVERLAY_THEMES[theme]
-
       win.setTitleBarOverlay({ ...overlay, height: TITLE_BAR_OVERLAY_HEIGHT })
     }
-
-    ipcMain.on('window-controls:theme', onThemeChanged)
-    win.on('closed', () => {
-      ipcMain.removeListener('window-controls:theme', onThemeChanged)
-    })
+    saveLastTheme(theme)
   }
+
+  ipcMain.on('window-controls:theme', onThemeChanged)
+  win.on('closed', () => {
+    ipcMain.removeListener('window-controls:theme', onThemeChanged)
+  })
 
   // Copy a calculation result to the clipboard. The page can't use the web
   // clipboard API because all permissions are denied above, so it asks here.
