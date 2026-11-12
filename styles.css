@@ -438,7 +438,7 @@ body[data-theme="dark"] [data-pressable].pressed {
 
     padding: 0px;
     margin: 0px;
-    margin-top: 0px;
+    margin-top: 4px;
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -692,38 +692,67 @@ body[data-theme="dark"] .History_Day_Heading {
 
 .Themes_Selector_Button {
     width: 100%;
-    height: 20px;
     outline: none;
     border: 0;
-    margin-top: 10px;
+    margin-top: 1px;
 
     background-color: transparent;
+    color: inherit;
+    cursor: pointer;
 
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    border-radius: 12px;
-    transition: background-color 0.2s ease;
+    gap: 10px;
+    /* Same side padding and radius as the history rows, so the selected
+       checkmark lines up with the copy icons and the hover backgrounds match. */
+    padding: 3px 10px;
+    border-radius: 10px;
+    transition: background-color 0.15s ease;
 }
 
-.Themes_Selector_Button.selected {
-    background-color: transparent;
+.Themes_Section .Menu_Subtitle + .Themes_Selector_Button {
+    margin-top: 4px;
 }
 
-.Themes_Selector_Button.selected .Checkmark_Image {
+.Themes_Selector_Button:hover,
+.Themes_Selector_Button:focus-visible {
+    background-color: rgba(110, 120, 135, 0.12);
+}
+
+.Themes_Selector_Button:active {
+    background-color: rgba(110, 120, 135, 0.2);
+}
+
+/* Same checkmark shape, size and stroke as the history copy icons. */
+.Theme_Check {
+    flex-shrink: 0;
+    width: 24px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: black;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.Themes_Selector_Button.selected .Theme_Check {
     opacity: 1;
 }
 
-.Checkmark_Image {
-    width: 15px;
-    height: 15px;
+.Theme_Check_Icon {
+    width: 18px;
+    height: 18px;
 
-    margin: 0px;
-    padding: 0px;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .Themes_Selector_Title {
@@ -732,7 +761,6 @@ body[data-theme="dark"] .History_Day_Heading {
     font-weight: 400;
 
     margin: 0px;
-    margin-left: 10px;
     padding: 0px;
 }
 
@@ -857,6 +885,19 @@ body[data-theme="dark"] .History_Copy.copied .History_Copy_Indicator {
 body[data-theme="dark"] .History_Result {
     color: rgb(230, 235, 240);
     transition: 0.2s;
+}
+
+body[data-theme="dark"] .Themes_Selector_Button:hover,
+body[data-theme="dark"] .Themes_Selector_Button:focus-visible {
+    background-color: rgba(230, 235, 240, 0.08);
+}
+
+body[data-theme="dark"] .Themes_Selector_Button:active {
+    background-color: rgba(230, 235, 240, 0.14);
+}
+
+body[data-theme="dark"] .Theme_Check {
+    color: rgb(230, 235, 240);
 }
 
 body[data-theme="dark"] .Themes_Selector_Title {
