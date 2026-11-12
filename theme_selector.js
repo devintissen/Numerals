@@ -7,7 +7,6 @@ const systemDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 // Mapping for image sources based on theme
 const imageMappings = {
     'Menu.png': { light: 'Images/Menu.png', dark: 'Images/Menu White.png' },
-    'Checkmark.png': { light: 'Images/Checkmark.png', dark: 'Images/Checkmark White.png' },
     'Positive_Negative.png': { light: 'Images/Positive_Negative.png', dark: 'Images/Positive Negative White.png' },
     'Divide.png': { light: 'Images/Divide.png', dark: 'Images/Divide White.png' },
     'Multiplication.png': { light: 'Images/Multiplication.png', dark: 'Images/Multiplication White.png' }
