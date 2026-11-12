@@ -707,7 +707,7 @@ body[data-theme="dark"] .History_Day_Heading {
     gap: 10px;
     /* Same side padding and radius as the history rows, so the selected
        checkmark lines up with the copy icons and the hover backgrounds match. */
-    padding: 3px 10px;
+    padding: 6px 10px;
     border-radius: 10px;
     transition: background-color 0.15s ease;
 }
