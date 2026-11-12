@@ -438,7 +438,7 @@ body[data-theme="dark"] [data-pressable].pressed {
 
     padding: 0px;
     margin: 0px;
-    margin-top: 0px;
+    margin-top: 4px;
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -695,7 +695,7 @@ body[data-theme="dark"] .History_Day_Heading {
     height: 20px;
     outline: none;
     border: 0;
-    margin-top: 10px;
+    margin-top: 7px;
 
     background-color: transparent;
 
