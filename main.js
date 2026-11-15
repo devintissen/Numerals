@@ -26,7 +26,20 @@ const RENDERER_FILES = new Set([
   'theme_boot.js',
   'theme_selector.js',
   'history.js',
+  'about.js',
 ])
+
+// Written into the packaged app by forge.config.js at build time. It is
+// missing during `npm start`, in which case the footer shows only the version.
+function readReleaseDate() {
+  try {
+    const info = JSON.parse(fs.readFileSync(path.join(__dirname, 'build-info.json'), 'utf8'))
+    const date = typeof info.releaseDate === 'string' ? new Date(info.releaseDate) : null
+    return date && !Number.isNaN(date.getTime()) ? date.toISOString() : null
+  } catch {
+    return null
+  }
+}
 
 function isRendererFile(relativePath) {
   const name = relativePath.replace(/^\/+/, '')
@@ -264,6 +277,17 @@ const createWindow = () => {
   ipcMain.on('clipboard:copy-result', onCopyResult)
   win.on('closed', () => {
     ipcMain.removeListener('clipboard:copy-result', onCopyResult)
+  })
+
+  // App details for the menu footer. Read-only, and only answered for this window.
+  const onAppInfo = (event) => {
+    if (event.sender !== win.webContents) return null
+    return { version: app.getVersion(), releaseDate: readReleaseDate() }
+  }
+
+  ipcMain.handle('app-info:get', onAppInfo)
+  win.on('closed', () => {
+    ipcMain.removeHandler('app-info:get')
   })
 
   win.loadURL(`${APP_SCHEME}://${APP_HOST}/index.html`)

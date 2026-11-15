@@ -55,6 +55,14 @@
                     </span>
                 </button>
             </div>
+
+            <!-- App version, release date and (once the updater exists) update status. Filled in by about.js. -->
+            <footer class="About" id="about">
+                <p class="About_Line" id="aboutLine" hidden>
+                    <span class="About_Name">Numerals</span> <span id="aboutVersion"></span><span id="aboutDate"></span>
+                </p>
+                <div class="About_Status" id="aboutStatus" aria-live="polite" hidden></div>
+            </footer>
         </div>
 
         <div class="Sheet_Page Sheet_Page_History" id="historyPage" aria-hidden="true" inert>
@@ -191,5 +199,6 @@
     <script src="user_input.js"></script>
     <script src="menu.js"></script>
     <script src="theme_selector.js"></script>
+    <script src="about.js"></script>
 </body>
 </html>

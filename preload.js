@@ -19,3 +19,9 @@ contextBridge.exposeInMainWorld('numeralsClipboard', {
     }
   },
 })
+
+// Read-only app details for the menu footer: the version and the date this
+// version was released. Nothing here can change anything in the main process.
+contextBridge.exposeInMainWorld('numeralsApp', {
+  getInfo: () => ipcRenderer.invoke('app-info:get'),
+})

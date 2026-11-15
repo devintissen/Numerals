@@ -27,7 +27,7 @@ const osxNotarizeConfig =
 // Anything not named here stays out of the packaged app. This allowlist means
 // local files such as .env or signing keys can never be shipped by accident,
 // even though .gitignore keeps them out of Git. Add new runtime files here.
-const NOT_PACKAGED = /^\/(?!(?:package\.json|LICENSE|index\.html|styles\.css|(?:main|preload|menu|user_input|theme_boot|theme_selector|history|button_animation|button_animation_opacity)\.js|Images|node_modules)(?:\/|$))/;
+const NOT_PACKAGED = /^\/(?!(?:package\.json|LICENSE|index\.html|styles\.css|(?:main|preload|menu|user_input|theme_boot|theme_selector|history|about|button_animation|button_animation_opacity)\.js|Images|node_modules)(?:\/|$))/;
 
 module.exports = {
   packagerConfig: Object.assign(
@@ -42,6 +42,19 @@ module.exports = {
   ),
   rebuildConfig: {},
   hooks: {
+    // Stamp the release date into the packaged app for the menu footer. It uses
+    // the date of the commit being built (not the build time), so rebuilding the
+    // same release gives the same date. Falls back to now outside a Git checkout.
+    packageAfterCopy: async (_forgeConfig, buildPath) => {
+      let releaseDate = new Date().toISOString();
+      try {
+        const committed = execFileSync('git', ['log', '-1', '--format=%cI'], { encoding: 'utf8' }).trim();
+        if (committed) releaseDate = new Date(committed).toISOString();
+      } catch {
+        // Not a Git checkout; keep the current time.
+      }
+      fs.writeFileSync(path.join(buildPath, 'build-info.json'), JSON.stringify({ releaseDate }));
+    },
     // Without a Developer ID, packaging leaves the app with a broken
     // signature, and macOS on Apple Silicon reports it as "damaged" with no
     // way to open it. An ad-hoc signature (`-`) makes the signature valid
