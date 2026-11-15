@@ -153,3 +153,19 @@ test('keyboard leaves the calculator alone while the sheet is open', (t) => {
   assert.equal(sendKey('Enter').defaultPrevented, false);
   assert.equal(calculator.getExpression(), '7');
 });
+
+test('multi-character inputs stay within the maximum expression length', () => {
+  clearAll();
+  while (getExpression().length < MAX_EXPRESSION_LENGTH - 2) appendValue('9');
+  appendValue('%');
+  appendValue('5'); // would add "*5"
+  toggleSign();     // would add "-"
+  appendValue('+');
+  appendValue('.'); // would add "0."
+  assert.ok(getExpression().length <= MAX_EXPRESSION_LENGTH);
+
+  clearAll();
+  while (getExpression().length < MAX_EXPRESSION_LENGTH) appendValue('9');
+  toggleSign();
+  assert.equal(getExpression().length, MAX_EXPRESSION_LENGTH);
+});
