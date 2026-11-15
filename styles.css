@@ -544,6 +544,78 @@ body[data-theme="dark"] [data-pressable].pressed {
     color: black;
 }
 
+/* Menu footer: version, release date and update status. Sits at the
+   bottom of the menu page, below everything else. */
+.Sheet_Page_Main {
+    display: flex;
+    flex-direction: column;
+}
+
+.About {
+    margin-top: auto;
+    padding-top: 22px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+
+    font-family: sans-serif;
+    font-size: 11px;
+    text-align: center;
+    color: rgb(110, 120, 135);
+}
+
+.About_Line {
+    margin: 0px;
+}
+
+.About_Line[hidden],
+.About_Status[hidden] {
+    display: none;
+}
+
+.About_Name {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(85, 94, 108);
+}
+
+/* Fixed height so the footer doesn't shift when the status changes
+   between plain text and a link. */
+.About_Status {
+    height: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: pre;
+}
+
+.About_Link {
+    margin: 0px;
+    padding: 0px;
+    border: 0;
+    background: none;
+
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+}
+
+.About_Link:hover,
+.About_Link:focus-visible {
+    color: rgb(30, 35, 42);
+}
+
+/* "Restart to update": the one state that needs the user. */
+.About_Link_Strong {
+    font-weight: 600;
+    color: rgb(30, 35, 42);
+}
+
 .History_Empty {
     margin: 0px;
     margin-top: 10px;
@@ -834,6 +906,20 @@ body[data-theme="dark"] .Menu_Close {
 body[data-theme="dark"] .Menu_Subtitle {
     color: rgb(230, 235, 240);
     transition: 0.2s;
+}
+
+body[data-theme="dark"] .About {
+    color: rgb(150, 160, 175);
+}
+
+body[data-theme="dark"] .About_Name {
+    color: rgb(180, 188, 200);
+}
+
+body[data-theme="dark"] .About_Link:hover,
+body[data-theme="dark"] .About_Link:focus-visible,
+body[data-theme="dark"] .About_Link_Strong {
+    color: rgb(230, 235, 240);
 }
 
 body[data-theme="dark"] .History_Expression,
