@@ -36,6 +36,17 @@ function isOperator(char) {
 }
 
 function appendValue(value) {
+    // Some keys add more than one character (a digit after "%" also adds "*",
+    // and "." after an operator adds "0."), so check the length afterwards too.
+    const before = expression;
+    appendValueUnchecked(value);
+    if (expression.length > MAX_EXPRESSION_LENGTH) {
+    expression = before;
+    updateDisplay();
+    }
+}
+
+function appendValueUnchecked(value) {
     if (!ALLOWED_VALUES.has(value)) return;
 
     if (justEvaluated && !isOperator(value)) {
@@ -141,7 +152,10 @@ function toggleSign() {
     toggled = '-' + numberPart;
     }
 
-    expression = expression.slice(0, -target.length) + toggled + (hasPercent ? '%' : '');
+    const next = expression.slice(0, -target.length) + toggled + (hasPercent ? '%' : '');
+    // Adding a "-" must not push the expression past the length cap.
+    if (next.length > MAX_EXPRESSION_LENGTH) return;
+    expression = next;
     updateDisplay();
 }
 
