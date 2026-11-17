@@ -13,6 +13,19 @@ protocol.registerSchemesAsPrivileged([
   { scheme: APP_SCHEME, privileges: { standard: true, secure: true } },
 ])
 
+// Security headers added to every app:// response. The CSP matches the <meta>
+// tag in index.html, plus frame-ancestors, which only works as a header (it
+// stops another page from embedding this one). Sending the CSP as a header as
+// well means it is in force
+// before the page is parsed and still applies if the <meta> tag is ever
+// removed or moved. Browsers enforce both, so the stricter rule always wins.
+// nosniff stops Chromium from guessing a file's type from its contents.
+const APP_RESPONSE_HEADERS = {
+  'Content-Security-Policy':
+    "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+  'X-Content-Type-Options': 'nosniff',
+}
+
 // The page only ever loads these files, so app:// serves nothing else. This
 // keeps main.js, preload.js, package.json, node_modules (and, during
 // `npm start`, the .git folder or a local .env) out of the page's reach.
@@ -49,7 +62,7 @@ function isRendererFile(relativePath) {
 function registerAppProtocol() {
   const appRoot = app.getAppPath()
 
-  protocol.handle(APP_SCHEME, (request) => {
+  protocol.handle(APP_SCHEME, async (request) => {
     const { host, pathname } = new URL(request.url)
     if (host !== APP_HOST) {
       return new Response('Not found', { status: 404 })
@@ -72,7 +85,16 @@ function registerAppProtocol() {
       return new Response('Not found', { status: 404 })
     }
 
-    return net.fetch(pathToFileURL(filePath).toString())
+    const fileResponse = await net.fetch(pathToFileURL(filePath).toString())
+    const headers = new Headers(fileResponse.headers)
+    for (const [name, value] of Object.entries(APP_RESPONSE_HEADERS)) {
+      headers.set(name, value)
+    }
+    return new Response(fileResponse.body, {
+      status: fileResponse.status,
+      statusText: fileResponse.statusText,
+      headers,
+    })
   })
 }
 
