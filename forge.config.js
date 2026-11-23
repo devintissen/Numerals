@@ -27,7 +27,7 @@ const osxNotarizeConfig =
 // Anything not named here stays out of the packaged app. This allowlist means
 // local files such as .env or signing keys can never be shipped by accident,
 // even though .gitignore keeps them out of Git. Add new runtime files here.
-const NOT_PACKAGED = /^\/(?!(?:package\.json|LICENSE|index\.html|styles\.css|(?:main|preload|menu|user_input|theme_boot|theme_selector|history|about|button_animation|button_animation_opacity)\.js|Images|node_modules)(?:\/|$))/;
+const NOT_PACKAGED = /^\/(?!(?:package\.json|LICENSE|index\.html|styles\.css|(?:main|preload|squirrel_events|menu|user_input|theme_boot|theme_selector|history|about|button_animation|button_animation_opacity)\.js|Images|node_modules)(?:\/|$))/;
 
 module.exports = {
   packagerConfig: Object.assign(
@@ -96,7 +96,7 @@ module.exports = {
     },
     // Windows installer (Setup.exe). It installs Numerals for the current user
     // without needing admin rights, adds it to the Start menu and desktop (via
-    // electron-squirrel-startup in main.js), and lists it in Settings > Apps so
+    // squirrel_events.js), and lists it in Settings > Apps so
     // it can be uninstalled normally.
     {
       name: '@electron-forge/maker-squirrel',
