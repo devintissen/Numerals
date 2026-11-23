@@ -1,6 +1,8 @@
 const fs = require('node:fs')
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
+const { spawn } = require('node:child_process')
+const { handleSquirrelEvent } = require('./squirrel_events')
 const { app, BrowserWindow, session, ipcMain, protocol, net, clipboard, nativeTheme } = require('electron')
 
 // Serve the app from app://numerals/ instead of file://. A file:// page can
@@ -76,21 +78,16 @@ function registerAppProtocol() {
   })
 }
 
-// Handle Windows Squirrel install/uninstall events gracefully, if the
-// optional `electron-squirrel-startup` package is present. This prevents
-// the app from continuing to launch during install/update events.
-// Squirrel is the Windows installer, so skip loading this on other platforms.
-if (process.platform === 'win32') {
-  try {
-    // Require is wrapped in try/catch so absence of the package won't break
-    // development or other packaging flows.
-    const squirrelStartup = require('electron-squirrel-startup');
-    if (squirrelStartup) {
-      app.quit();
-    }
-  } catch (e) {
-    // Optional dependency not installed — ignore.
-  }
+// Handle Windows installer (Squirrel) install/update/uninstall launches: set
+// up or remove shortcuts and quit, so no calculator window opens mid-install.
+// Does nothing on macOS or on a normal launch. See squirrel_events.js.
+if (handleSquirrelEvent({
+  platform: process.platform,
+  argv: process.argv,
+  execPath: process.execPath,
+  spawn,
+})) {
+  app.quit()
 }
 
 const isDev = !app.isPackaged
