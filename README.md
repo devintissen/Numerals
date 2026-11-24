@@ -22,7 +22,7 @@ A minimalist calculator inspired by the macOS Calculator, featuring a cleaner in
 
 Before getting started, make sure you have the following installed:
 
-- Node.js 20 LTS or 22+
+- Node.js 22.13 or newer (24 LTS recommended)
 - npm (comes with Node.js)
 
 You can download Node.js from:
