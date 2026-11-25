@@ -114,6 +114,9 @@ module.exports = {
     // at package time, before code signing the application
     new FusesPlugin({
       version: FuseVersion.V1,
+      // Fail the build if a future Electron adds a fuse that isn't listed
+      // here, so every fuse is a deliberate choice instead of a silent default.
+      strictlyRequireAllFuses: true,
       [FuseV1Options.RunAsNode]: false,
       [FuseV1Options.EnableCookieEncryption]: true,
       [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
@@ -123,6 +126,9 @@ module.exports = {
       // The app is served from app:// (see main.js), so file:// pages don't
       // need the extra access Electron gives them by default.
       [FuseV1Options.GrantFileProtocolExtraPrivileges]: false,
+      // Both are Electron's defaults, listed so strictlyRequireAllFuses passes.
+      [FuseV1Options.LoadBrowserProcessSpecificV8Snapshot]: false,
+      [FuseV1Options.WasmTrapHandlers]: true,
     }),
   ],
 };
