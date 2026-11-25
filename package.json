@@ -1,7 +1,7 @@
 {
   "name": "Numerals",
   "version": "1.1.1",
-  "private": false,
+  "private": true,
   "description": "Minimalistic calculator for macOS and Windows 11",
   "keywords": [
     "electron",
