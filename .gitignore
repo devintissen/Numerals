@@ -47,6 +47,16 @@ Thumbs.db
 *.key
 *.crt
 *.csr
+# Windows code-signing certificate (with its private key)
+*.pfx
+# Apple: App Store Connect API key (notarytool), certificates, provisioning
+# profiles and exported keychains
+*.p8
+*.cer
+*.mobileprovision
+*.provisionprofile
+*.keychain
+*.keychain-db
 
 # Common cloud/credentials config
 *.s3cfg
