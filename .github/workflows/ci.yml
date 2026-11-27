@@ -12,6 +12,8 @@ permissions:
 jobs:
   test-and-audit:
     runs-on: ubuntu-latest
+    # Stop a stuck job early instead of letting it run for GitHub's 6-hour default.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -33,6 +35,7 @@ jobs:
   package-smoke:
     needs: test-and-audit
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
       matrix:
         os: [macos-latest, windows-latest]

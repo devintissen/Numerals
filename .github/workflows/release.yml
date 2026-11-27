@@ -16,6 +16,8 @@ jobs:
   build:
     name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    # Stop a stuck job early instead of letting it run for GitHub's 6-hour default.
+    timeout-minutes: 45
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
@@ -70,6 +72,7 @@ jobs:
     name: Create draft release
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write # needed only here, to create the draft release
     steps:
